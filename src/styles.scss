@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+td {
+    width: 150px;
+    height: 75px;
+    text-align: center;
+    background-color: bisque;
+    font-size: xx-large;
+}
+
+.operation{
+    background-color: darkgrey;
+}
+
+input {
+    font-size: 40px;
+}
