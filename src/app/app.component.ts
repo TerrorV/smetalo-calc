@@ -166,4 +166,94 @@ export class AppComponent {
 
     this.current = '' + (Math.sqrt(currentNum));
   }
+
+  /**
+   * OnKeyPress
+key:string   */
+  public OnKeyPressed(event: any) {
+    console.log(event);
+    var key: string = event.key;
+    switch (key) {
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        this.Enter(key);
+        break;
+      case '/':
+        this.Divide();
+        break;
+      case '*':
+        this.Multiply();
+        break;
+      case '-':
+        this.Subtract();
+        break;
+      case '+':
+        this.Add();
+        break;
+      case '=':
+      case 'Enter':
+        this.Calculate();
+        break;
+      case 'Escape':
+        this.ClearAll();
+        break;
+        case 'Backspace':
+          this.DeleteLast();
+          break;  
+      default:
+        break;
+    }
+  }
+
+  public OnKeyDownInput(event: any) {
+    console.log(event);
+    var key: string = event.key;
+    switch (key) {
+      case '/':
+        this.Divide();
+        event.cancelBubble = true;
+        event.stopPropagation();
+        event.preventDefault();
+        break;
+      case '*':
+        this.Multiply();
+        event.cancelBubble = true;
+        event.stopPropagation();
+        event.preventDefault();
+        break;
+      case '-':
+        this.Subtract();
+        event.cancelBubble = true;
+        event.stopPropagation();
+        event.preventDefault();
+        break;
+      case '+':
+        this.Add();
+        event.cancelBubble = true;
+        event.stopPropagation();
+        event.preventDefault();
+        break;
+      case '=':
+      case 'Enter':
+        this.Calculate();
+        break;
+      case 'Escape':
+        this.ClearAll();
+        break;
+        case 'Backspace':
+          this.DeleteLast();
+          break;  
+      default:
+        break;
+    }
+
+  }
 }

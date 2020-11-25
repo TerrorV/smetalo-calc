@@ -9,6 +9,8 @@ td {
     text-align: center;
     background-color: bisque;
     font-size: xx-large;
+    border: darkred;
+    border-width: 1px;
 }
 
 .operation{
@@ -17,4 +19,10 @@ td {
 
 input {
     font-size: 40px;
+}
+
+.bottom-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
