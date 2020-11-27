@@ -83,6 +83,10 @@ export class AppComponent {
   }
 
   private TransferToAccumulator() {
+    if(this.current == ''){
+      return;
+    }
+
     this.accumulator = parseFloat(this.current);
     this.current = '';
   }

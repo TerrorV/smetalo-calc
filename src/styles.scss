@@ -3,6 +3,10 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+table   {
+    user-select: none;
+}
+
 td {
     width: 150px;
     height: 75px;
