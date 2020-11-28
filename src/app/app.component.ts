@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Entry } from './entities/entry';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'smetalo-calc';
-  current: string = '';
+  current: string = '0';
   accumulator: number = 0;
   operation: string = "";
+  entries:Entry[] = [];
 
   /**
    * Enter
@@ -24,7 +26,8 @@ export class AppComponent {
     // }
 
     if (input == '.' && this.current.indexOf('.') < 0) {
-
+      if (this.current == '')
+        this.current = '0';
       this.current += '.';
     }
     else if (input == '0' && this.current == '0') {
@@ -44,6 +47,15 @@ export class AppComponent {
   public EnterString(input: string) {
     console.log(input);
 
+  }
+
+  /**
+   * Equals
+   */
+  public Equals() {
+
+    var tempNbr:number = parseFloat(this.current);  
+    this.Calculate();
   }
 
   public Calculate() {
@@ -70,7 +82,7 @@ export class AppComponent {
         break;
     }
 
-    this.operation = '=';
+    // this.operation = '=';
     console.log("Eq");
 
   }
@@ -83,12 +95,10 @@ export class AppComponent {
   }
 
   private TransferToAccumulator() {
-    if(this.current == ''){
-      return;
-    }
+    this.Calculate();
 
     this.accumulator = parseFloat(this.current);
-    this.current = '';
+    this.current = '0';
   }
 
   public Subtract() {
@@ -125,16 +135,17 @@ export class AppComponent {
   }
 
   public Clear() {
-    this.current = "";
-    this.operation = "%"
+    this.current = "0";
+    //this.operation = "%"
 
-    console.log("%");
+    console.log("clr");
   }
 
   public ClearAll() {
-    this.current = '';
+    this.current = '0';
     this.accumulator = 0;
     this.operation = '';
+    console.log("clra");
   }
 
   public InvertSign() {
@@ -149,9 +160,11 @@ export class AppComponent {
 
   public DeleteLast() {
     this.current = this.current.substring(0, this.current.length - 1);
+    console.log("del last");
   }
 
   public OneOverX() {
+    console.log("1/x");
     var currentNum: number = parseFloat(this.current);
     if (currentNum === 0) {
       return;
@@ -161,11 +174,13 @@ export class AppComponent {
   }
 
   public Square() {
+    console.log("^2");
     var currentNum: number = parseFloat(this.current);
     this.current = '' + (currentNum * currentNum);
   }
 
   public Root() {
+    console.log("sqrt");
     var currentNum: number = parseFloat(this.current);
 
     this.current = '' + (Math.sqrt(currentNum));
@@ -175,6 +190,7 @@ export class AppComponent {
    * OnKeyPress
 key:string   */
   public OnKeyPressed(event: any) {
+    console.log("key press");
     console.log(event);
     var key: string = event.key;
     switch (key) {
@@ -188,6 +204,7 @@ key:string   */
       case '7':
       case '8':
       case '9':
+      case '.':
         this.Enter(key);
         break;
       case '/':
@@ -202,6 +219,9 @@ key:string   */
       case '+':
         this.Add();
         break;
+      case '%':
+        this.Percent();
+        break;
       case '=':
       case 'Enter':
         this.Calculate();
@@ -209,55 +229,59 @@ key:string   */
       case 'Escape':
         this.ClearAll();
         break;
-        case 'Backspace':
-          this.DeleteLast();
-          break;  
+      case 'Backspace':
+        this.DeleteLast();
+        break;
       default:
         break;
     }
   }
 
   public OnKeyDownInput(event: any) {
+    console.log("key dn");
     console.log(event);
-    var key: string = event.key;
-    switch (key) {
-      case '/':
-        this.Divide();
-        event.cancelBubble = true;
-        event.stopPropagation();
-        event.preventDefault();
-        break;
-      case '*':
-        this.Multiply();
-        event.cancelBubble = true;
-        event.stopPropagation();
-        event.preventDefault();
-        break;
-      case '-':
-        this.Subtract();
-        event.cancelBubble = true;
-        event.stopPropagation();
-        event.preventDefault();
-        break;
-      case '+':
-        this.Add();
-        event.cancelBubble = true;
-        event.stopPropagation();
-        event.preventDefault();
-        break;
-      case '=':
-      case 'Enter':
-        this.Calculate();
-        break;
-      case 'Escape':
-        this.ClearAll();
-        break;
-        case 'Backspace':
-          this.DeleteLast();
-          break;  
-      default:
-        break;
-    }
+    this.OnKeyPressed(event);
+    event.stopPropagation();
+    event.preventDefault();
+    // var key: string = event.key;
+    // switch (key) {
+    //   case '/':
+    //     this.Divide();
+    //     event.cancelBubble = true;
+    //     event.stopPropagation();
+    //     event.preventDefault();
+    //     break;
+    //   case '*':
+    //     this.Multiply();
+    //     event.cancelBubble = true;
+    //     event.stopPropagation();
+    //     event.preventDefault();
+    //     break;
+    //   case '-':
+    //     this.Subtract();
+    //     event.cancelBubble = true;
+    //     event.stopPropagation();
+    //     event.preventDefault();
+    //     break;
+    //   case '+':
+    //     this.Add();
+    //     event.cancelBubble = true;
+    //     event.stopPropagation();
+    //     event.preventDefault();
+    //     break;
+    //   case '=':
+    //   case 'Enter':
+    //     this.Calculate();
+    //     break;
+    //   case 'Escape':
+    //     this.ClearAll();
+    //     break;
+    //   case 'Backspace':
+    //     this.DeleteLast();
+    //     break;
+    //   default:
+    //     break;
+    // }
 
   }
 }
