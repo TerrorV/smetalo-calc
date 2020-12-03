@@ -6,7 +6,9 @@
 <div class="main-content" tabindex="0" (keydown)="OnKeyPressed($event)">
 <input style="width: 90%; text-align: right;" [(ngModel)] = "current" (keydown)="OnKeyDownInput($event)" >
  <p><span *ngIf="operation!=''" >{{accumulator}} {{operation}} {{current}}</span>&nbsp;</p>
-
+  <div *ngFor="let entry of entries">
+    {{entry.value}}
+  </div>
 <div class="bottom-content">
 
 <table class="keypad" (keydown)="OnKeyPressed($event)">

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Entry } from './entities/entry';
+import { NumericEntry } from './entities/numeric-entry';
+import { OperationEntry } from './entities/operation-entry';
 
 @Component({
   selector: 'app-root',
@@ -54,8 +56,11 @@ export class AppComponent {
    */
   public Equals() {
 
-    var tempNbr:number = parseFloat(this.current);  
+    var tempCurr:number = parseFloat(this.current);
+    var tempAcc: number = this.accumulator;
     this.Calculate();
+
+    this.accumulator = tempCurr;
   }
 
   public Calculate() {
@@ -99,12 +104,13 @@ export class AppComponent {
 
     this.accumulator = parseFloat(this.current);
     this.current = '0';
+    this.entries.push(new NumericEntry(this.accumulator));
+    console.log(this.entries);
   }
 
   public Subtract() {
     this.TransferToAccumulator();
     this.operation = "-"
-
     console.log("Sub");
 
   }
@@ -224,7 +230,8 @@ key:string   */
         break;
       case '=':
       case 'Enter':
-        this.Calculate();
+        //this.Calculate();
+        this.Equals();
         break;
       case 'Escape':
         this.ClearAll();
@@ -235,6 +242,12 @@ key:string   */
       default:
         break;
     }
+
+    if( this.entries[this.entries.length-1].constructor.name == "NumericEntry"){
+      this.entries.push(new OperationEntry(this.operation));
+    }
+    console.log(this.entries);
+
   }
 
   public OnKeyDownInput(event: any) {
