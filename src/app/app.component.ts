@@ -12,6 +12,7 @@ import { OperationEntry } from './entities/operation-entry';
 export class AppComponent {
   title = 'smetalo-calc';
   current: string = '0';
+  currentNum: number = 0;
   accumulator: number = 0;
   operation: string = "";
   entries: Entry[] = [];
@@ -21,14 +22,6 @@ export class AppComponent {
    * Enter
    */
   public Enter(input: string) {
-    // if (this.operation !== '') {
-    //   this.current = '';
-    // }
-
-    // if(this.operation == "="){
-    //   this.operation = '';
-    // }
-
     if (input == '.' && this.current.indexOf('.') < 0) {
       if (this.current == '')
         this.current = '0';
@@ -49,9 +42,9 @@ export class AppComponent {
     this.lastOperation = InputType.Number;
   }
 
-  public EnterString(input: string) {
-    console.log(input);
 
+  TransferOperationToAccumulator() {
+    this.entries.push(new OperationEntry(this.operation));
   }
 
   /**
@@ -60,37 +53,48 @@ export class AppComponent {
   public Equals() {
     if (this.operation == '=') {
 
-      this.operation = (this.entries[this.entries.length - 3] as OperationEntry).value;
-      this.accumulator = (this.entries[this.entries.length - 2] as NumericEntry).value;
+      // this.operation = (this.entries[this.entries.length - 3] as OperationEntry).value;
+      // this.accumulator = (this.entries[this.entries.length - 2] as NumericEntry).value;
     }
 
-    var tempCurr: number = parseFloat(this.current);
-    var tempAcc: number = this.accumulator;
-    //this.Calculate();
-    this.TransferToAccumulator();
+    // this.currentNum = parseFloat(this.current);
+    // var tempAcc: number = this.accumulator;
+    // //this.Calculate();
+    this.TransferNumberToAccumulator();
     this.operation = '=';
+    this.TransferOperationToAccumulator();
     //this.accumulator = tempCurr;
     this.lastOperation = InputType.Operation;
   }
 
-  public Calculate() {
-    var currentNum: number = parseFloat(this.current);
-    if (this.operation == '/' && currentNum == 0) {
+    public Calculate() {
+      this.currentNum = parseFloat(this.current);
+      if (this.operation == '/' && this.currentNum == 0) {
+        return;
+      }
+  
+  }
+
+  public ExecuteCalculation(accumulator: number, current:number)
+  {
+
+    this.currentNum = parseFloat(this.current);
+    if (this.operation == '/' && this.currentNum == 0) {
       return;
     }
 
     switch (this.operation) {
       case '+':
-        this.current = '' + (this.accumulator + currentNum);
+        this.current = '' + (this.accumulator + this.currentNum);
         break;
       case '-':
-        this.current = '' + (this.accumulator - currentNum);
+        this.current = '' + (this.accumulator - this.currentNum);
         break;
       case '*':
-        this.current = '' + (this.accumulator * currentNum);
+        this.current = '' + (this.accumulator * this.currentNum);
         break;
       case '/':
-        this.current = '' + (this.accumulator / currentNum);
+        this.current = '' + (this.accumulator / this.currentNum);
         break;
 
       default:
@@ -102,25 +106,29 @@ export class AppComponent {
 
   }
 
+  private TransferNumberToAccumulator() {
+    if (this.lastOperation == InputType.Operation) {
+      return;
+    }
+
+    this.currentNum = parseFloat(this.current);
+    this.entries.push(new NumericEntry(this.accumulator));
+    this.Calculate();
+    this.current = '0';
+
+    console.log(this.entries);
+  }
+
   public Add() {
-    this.TransferToAccumulator();
+    this.TransferNumberToAccumulator();
     console.log("Add");
     this.operation = "+"
     this.lastOperation = InputType.Operation;
 
   }
 
-  private TransferToAccumulator() {
-    this.Calculate();
-
-    this.accumulator = parseFloat(this.current);
-    this.current = '0';
-    this.entries.push(new NumericEntry(this.accumulator));
-    console.log(this.entries);
-  }
-
   public Subtract() {
-    this.TransferToAccumulator();
+    // this.TransferNumberToAccumulator();
     this.operation = "-"
     console.log("Sub");
     this.lastOperation = InputType.Operation;
@@ -128,7 +136,7 @@ export class AppComponent {
   }
 
   public Multiply() {
-    this.TransferToAccumulator();
+    //  this.TransferNumberToAccumulator();
     this.operation = "*"
 
     console.log("Mult");
@@ -137,7 +145,7 @@ export class AppComponent {
   }
 
   public Divide() {
-    this.TransferToAccumulator();
+    //this.TransferNumberToAccumulator();
     this.operation = "/"
 
     console.log("Div");
@@ -147,9 +155,9 @@ export class AppComponent {
   public Percent() {
     // this.TransferToAccumulator();
     // this.operation="%"
-    var currentNum: number = parseFloat(this.current) * 0.01;
+    this.currentNum = parseFloat(this.current) * 0.01;
 
-    this.current = '' + this.accumulator * currentNum;
+    this.current = '' + this.accumulator * this.currentNum;
 
     console.log("%");
     this.lastOperation = InputType.Operation;
@@ -190,27 +198,27 @@ export class AppComponent {
 
   public OneOverX() {
     console.log("1/x");
-    var currentNum: number = parseFloat(this.current);
-    if (currentNum === 0) {
+    this.currentNum = parseFloat(this.current);
+    if (this.currentNum === 0) {
       return;
     }
 
-    this.current = '' + (1 / currentNum);
+    this.current = '' + (1 / this.currentNum);
     this.lastOperation = InputType.Operation;
   }
 
   public Square() {
     console.log("^2");
-    var currentNum: number = parseFloat(this.current);
-    this.current = '' + (currentNum * currentNum);
+    this.currentNum = parseFloat(this.current);
+    this.current = '' + (this.currentNum * this.currentNum);
     this.lastOperation = InputType.Operation;
   }
 
   public Root() {
     console.log("sqrt");
-    var currentNum: number = parseFloat(this.current);
+    this.currentNum = parseFloat(this.current);
 
-    this.current = '' + (Math.sqrt(currentNum));
+    this.current = '' + (Math.sqrt(this.currentNum));
     this.lastOperation = InputType.Operation;
   }
 
@@ -225,6 +233,7 @@ export class AppComponent {
     const key = event.key;
     // // console.log(event);
     // // var key: string = event.key;
+
     switch (key) {
       case '0':
       case '1':
@@ -269,7 +278,7 @@ export class AppComponent {
         break;
     }
 
-    if (this.entries.length && this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
+    if (this.entries.length>0 && this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
       this.entries.push(new OperationEntry(this.operation));
     }
   }
