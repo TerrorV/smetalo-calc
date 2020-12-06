@@ -1,57 +1,55 @@
-<!-- <mat-form-field class="example-full-width" style="width: 600px;">
-  <mat-label>Input</mat-label>
-  <input style="width: 600px;" matInput [(value)] = "current" >
-</mat-form-field> -->
-<!-- <input style="width: 100%;display: block; overflow: auto;  text-align: right;" matInput type="number" [(ngModel)] = "current" (keydown)="OnKeyDownInput($event)" > -->
-<div class="main-content" tabindex="0" (keydown)="OnKeyPressed($event)">
-<input style="width: 90%; text-align: right;" [(ngModel)] = "current" (keydown)="OnKeyDownInput($event)" >
- <p><span *ngIf="operation!=''" >{{accumulator}} {{operation}} {{current}}</span>&nbsp;</p>
-  <div *ngFor="let entry of entries">
-    {{entry.value}}
-  </div>
-<div class="bottom-content">
-
-<table class="keypad" (keydown)="OnKeyPressed($event)">
-  <tbody (keydown)="OnKeyPressed($event)">
-    <tr>
-      <td class="operation" (click)="ClearAll()" >C</td>
-      <td class="operation" (click)="Clear()">CE</td>
-      <td class="operation" (click)="Percent()">%</td>
-      <td class="operation"  (click)="DeleteLast()">&lt;=</td>
-    </tr>
-    <tr>
-      <td class="operation" (click)="OneOverX()" >1/x</td>
-      <td class="operation" (click)="Square()">x^2</td>
-      <td class="operation" (click)="Root()">&#8730;</td>
-      <td class="operation"  (click)="Divide()">/</td>
-    </tr>
-    <tr>
-      <td (click)="Enter('7')" >7</td>
-      <td (click)="Enter('8')">8</td>
-      <td (click)="Enter('9')">9</td>
-      <td class="operation"  (click)="Multiply()">X</td>
-    </tr>
- 
-    <tr>
-      <td (click)="Enter('4')">4</td>
-      <td (click)="Enter('5')">5</td>
-      <td (click)="Enter('6')">6</td>
-      <td class="operation" (click)="Subtract()">-</td>
-    </tr>
-    <tr>
-      <td (click)="Enter('1')">1</td>
-      <td (click)="Enter('2')">2</td>
-      <td (click)="Enter('3')">3</td>
-      <td class="operation" (click)="Add()">+</td>
-    </tr>
-    <tr>
-      <td (click)="InvertSign()">+/-</td>
-      <td (click)="Enter('0')">0</td>
-      <td (click)="Enter('.')">.</td>
-      <td class="operation" (click)="Calculate()">=</td>
-    </tr>
-   </tbody>
-</table>
-</div>
-
+<div class="calculator">
+    <div class="calculator__main">
+        <div class="calculator__input">
+            <input class="calculator-output__" [(ngModel)] = "current" >
+        </div>
+        <div class="calculator__keypad">
+            <table class="calculator__keypad-table">
+                <tbody>
+                    <tr>
+                        <td class="calculator__keypad-operation" (click)="ClearAll()" >C</td>
+                        <td class="calculator__keypad-operation" (click)="Clear()">CE</td>
+                        <td class="calculator__keypad-operation" (click)="Percent()">%</td>
+                        <td class="calculator__keypad-operation"  (click)="DeleteLast()">&lt;=</td>
+                    </tr>
+                    <tr>
+                        <td class="calculator__keypad-operation" (click)="OneOverX()" >1/x</td>
+                        <td class="calculator__keypad-operation" (click)="Square()">x^2</td>
+                        <td class="calculator__keypad-operation" (click)="Root()">&#8730;</td>
+                        <td class="calculator__keypad-operation"  (click)="Divide()">/</td>
+                    </tr>
+                    <tr>
+                        <td (click)="Enter('7')">7</td>
+                        <td (click)="Enter('8')">8</td>
+                        <td (click)="Enter('9')">9</td>
+                        <td class="calculator__keypad-operation"  (click)="Multiply()">X</td>
+                    </tr>
+                    <tr>
+                        <td (click)="Enter('4')">4</td>
+                        <td (click)="Enter('5')">5</td>
+                        <td (click)="Enter('6')">6</td>
+                        <td class="calculator__keypad-operation" (click)="Subtract()">-</td>
+                    </tr>
+                    <tr>
+                        <td (click)="Enter('1')">1</td>
+                        <td (click)="Enter('2')">2</td>
+                        <td (click)="Enter('3')">3</td>
+                        <td class="calculator__keypad-operation" (click)="Add()">+</td>
+                    </tr>
+                    <tr>
+                        <td (click)="InvertSign()">+/-</td>
+                        <td (click)="Enter('0')">0</td>
+                        <td (click)="Enter('.')">.</td>
+                        <td class="calculator__keypad-operation" (click)="Calculate()">=</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="calculator__history">
+        <p><span *ngIf="operation!=''" >{{accumulator}} {{operation}} {{current}}</span>&nbsp;</p>
+        <div *ngFor="let entry of entries">
+            {{entry.value}}
+        </div>
+    </div>
 </div>
