@@ -21,6 +21,9 @@ export class AppComponent {
    * Enter
    */
   public Enter(input: string) {
+    if (this.lastOperation == InputType.Operation) {
+      this.TransferOperationToAccumulator();
+    }
     // if (this.operation !== '') {
     //   this.current = '';
     // }
@@ -28,6 +31,10 @@ export class AppComponent {
     // if(this.operation == "="){
     //   this.operation = '';
     // }
+
+    if (this.operation == '=') {
+      this.current = '0';
+    }
 
     if (input == '.' && this.current.indexOf('.') < 0) {
       if (this.current == '')
@@ -48,6 +55,9 @@ export class AppComponent {
 
     this.lastOperation = InputType.Number;
   }
+  TransferOperationToAccumulator() {
+    this.entries.push(new OperationEntry(this.operation));
+  }
 
   public EnterString(input: string) {
     console.log(input);
@@ -67,8 +77,9 @@ export class AppComponent {
     var tempCurr: number = parseFloat(this.current);
     var tempAcc: number = this.accumulator;
     //this.Calculate();
-    this.TransferToAccumulator();
+    this.TransferNumberToAccumulator();
     this.operation = '=';
+    this.TransferOperationToAccumulator();
     //this.accumulator = tempCurr;
     this.lastOperation = InputType.Operation;
   }
@@ -103,24 +114,29 @@ export class AppComponent {
   }
 
   public Add() {
-    this.TransferToAccumulator();
+    this.TransferNumberToAccumulator();
     console.log("Add");
     this.operation = "+"
     this.lastOperation = InputType.Operation;
 
   }
 
-  private TransferToAccumulator() {
-    this.Calculate();
+  private TransferNumberToAccumulator() {
+    if (this.lastOperation == InputType.Operation) {
+      return;
+    }
+
 
     this.accumulator = parseFloat(this.current);
-    this.current = '0';
     this.entries.push(new NumericEntry(this.accumulator));
+    this.Calculate();
+    this.current = '0';
+
     console.log(this.entries);
   }
 
   public Subtract() {
-    this.TransferToAccumulator();
+    this.TransferNumberToAccumulator();
     this.operation = "-"
     console.log("Sub");
     this.lastOperation = InputType.Operation;
@@ -128,7 +144,7 @@ export class AppComponent {
   }
 
   public Multiply() {
-    this.TransferToAccumulator();
+    this.TransferNumberToAccumulator();
     this.operation = "*"
 
     console.log("Mult");
@@ -137,7 +153,7 @@ export class AppComponent {
   }
 
   public Divide() {
-    this.TransferToAccumulator();
+    this.TransferNumberToAccumulator();
     this.operation = "/"
 
     console.log("Div");
