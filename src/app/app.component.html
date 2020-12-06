@@ -1,7 +1,7 @@
 <div class="calculator">
     <div class="calculator__main">
-        <div class="calculator__input">
-            <input class="calculator-output__" [(ngModel)] = "current" >
+        <div class="calculator__input-container">
+            <input class="calculator__input" [ngModel]="current" (keydown)="onInputKeyDown($event)">
         </div>
         <div class="calculator__keypad">
             <table class="calculator__keypad-table">

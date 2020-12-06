@@ -10,10 +10,10 @@
     flex: 1 1 33.33%;
 }
 
-.calculator__input {
+.calculator__input-container {
     margin: 20px 20px 0;
 
-    input {
+    .calculator__input {
         width: 100%;
         font-size: 40px;
         text-align: right;
