@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Entry } from './entities/entry';
 import { InputType } from './entities/input-type';
 import { NumericEntry } from './entities/numeric-entry';
@@ -216,7 +216,8 @@ export class AppComponent {
 
   /**
    * OnKeyPress
-key:string   */
+  key:string   */
+  @HostListener('document:keydown', ['$event.key'])
   public OnKeyPressed(key: string) {
     console.log("key press");
     // // console.log(event);
@@ -268,15 +269,5 @@ key:string   */
     if (this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
       this.entries.push(new OperationEntry(this.operation));
     }
-
-    console.log(this.entries);
-  }
-
-  public OnKeyDownInput(event: any) {
-    console.log("key dn");
-    console.log(event);
-    this.OnKeyPressed(event.key);
-    event.stopPropagation();
-    event.preventDefault();
   }
 }
