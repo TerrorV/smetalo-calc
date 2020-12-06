@@ -225,9 +225,12 @@ export class AppComponent {
   /**
    * OnKeyPress
   key:string   */
-  @HostListener('document:keydown', ['$event.key'])
-  public OnKeyPressed(key: string) {
-    console.log("key press");
+  @HostListener('document:keydown', ['$event'])
+  public OnKeyPressed(event: any) {
+    if (event.handled) {
+        return;
+    }
+    const key = event.key;
     // // console.log(event);
     // // var key: string = event.key;
 
@@ -278,5 +281,10 @@ export class AppComponent {
     if (this.entries.length>0 && this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
       this.entries.push(new OperationEntry(this.operation));
     }
+  }
+
+  onInputKeyDown(e) {
+      this.OnKeyPressed(e);
+      e.handled = true;
   }
 }
