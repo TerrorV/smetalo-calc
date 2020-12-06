@@ -47,19 +47,14 @@ export class AppComponent {
     this.entries.push(new OperationEntry(this.operation));
   }
 
-  public EnterString(input: string) {
-    console.log(input);
-
-  }
-
   /**
    * Equals
    */
   public Equals() {
     if (this.operation == '=') {
 
-      this.operation = (this.entries[this.entries.length - 3] as OperationEntry).value;
-      this.accumulator = (this.entries[this.entries.length - 2] as NumericEntry).value;
+      // this.operation = (this.entries[this.entries.length - 3] as OperationEntry).value;
+      // this.accumulator = (this.entries[this.entries.length - 2] as NumericEntry).value;
     }
 
     // this.currentNum = parseFloat(this.current);
@@ -72,7 +67,17 @@ export class AppComponent {
     this.lastOperation = InputType.Operation;
   }
 
-  public Calculate() {
+    public Calculate() {
+      this.currentNum = parseFloat(this.current);
+      if (this.operation == '/' && this.currentNum == 0) {
+        return;
+      }
+  
+  }
+
+  public ExecuteCalculation(accumulator: number, current:number)
+  {
+
     this.currentNum = parseFloat(this.current);
     if (this.operation == '/' && this.currentNum == 0) {
       return;
@@ -225,6 +230,7 @@ export class AppComponent {
     console.log("key press");
     // // console.log(event);
     // // var key: string = event.key;
+
     switch (key) {
       case '0':
       case '1':
@@ -269,7 +275,7 @@ export class AppComponent {
         break;
     }
 
-    if (this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
+    if (this.entries.length>0 && this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
       this.entries.push(new OperationEntry(this.operation));
     }
   }
