@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Entry } from './entities/entry';
+import { InputType } from './entities/input-type';
 import { NumericEntry } from './entities/numeric-entry';
 import { OperationEntry } from './entities/operation-entry';
 
@@ -13,8 +14,9 @@ export class AppComponent {
   current: string = '0';
   accumulator: number = 0;
   operation: string = "";
-  entries:Entry[] = [];
+  entries: Entry[] = [];
 
+  lastOperation: InputType = InputType.Number;
   /**
    * Enter
    */
@@ -44,6 +46,7 @@ export class AppComponent {
       console.log(input);
     }
 
+    this.lastOperation = InputType.Number;
   }
 
   public EnterString(input: string) {
@@ -55,12 +58,19 @@ export class AppComponent {
    * Equals
    */
   public Equals() {
+    if (this.operation == '=') {
 
-    var tempCurr:number = parseFloat(this.current);
+      this.operation = (this.entries[this.entries.length - 3] as OperationEntry).value;
+      this.accumulator = (this.entries[this.entries.length - 2] as NumericEntry).value;
+    }
+
+    var tempCurr: number = parseFloat(this.current);
     var tempAcc: number = this.accumulator;
-    this.Calculate();
-
-    this.accumulator = tempCurr;
+    //this.Calculate();
+    this.TransferToAccumulator();
+    this.operation = '=';
+    //this.accumulator = tempCurr;
+    this.lastOperation = InputType.Operation;
   }
 
   public Calculate() {
@@ -96,6 +106,7 @@ export class AppComponent {
     this.TransferToAccumulator();
     console.log("Add");
     this.operation = "+"
+    this.lastOperation = InputType.Operation;
 
   }
 
@@ -112,6 +123,7 @@ export class AppComponent {
     this.TransferToAccumulator();
     this.operation = "-"
     console.log("Sub");
+    this.lastOperation = InputType.Operation;
 
   }
 
@@ -120,6 +132,7 @@ export class AppComponent {
     this.operation = "*"
 
     console.log("Mult");
+    this.lastOperation = InputType.Operation;
 
   }
 
@@ -128,6 +141,7 @@ export class AppComponent {
     this.operation = "/"
 
     console.log("Div");
+    this.lastOperation = InputType.Operation;
   }
 
   public Percent() {
@@ -138,6 +152,7 @@ export class AppComponent {
     this.current = '' + this.accumulator * currentNum;
 
     console.log("%");
+    this.lastOperation = InputType.Operation;
   }
 
   public Clear() {
@@ -145,6 +160,7 @@ export class AppComponent {
     //this.operation = "%"
 
     console.log("clr");
+    this.lastOperation = InputType.Number;
   }
 
   public ClearAll() {
@@ -152,6 +168,7 @@ export class AppComponent {
     this.accumulator = 0;
     this.operation = '';
     console.log("clra");
+    this.lastOperation = InputType.Number;
   }
 
   public InvertSign() {
@@ -162,11 +179,13 @@ export class AppComponent {
     else {
       this.current = '-' + this.current;
     }
+    this.lastOperation = InputType.Number;
   }
 
   public DeleteLast() {
     this.current = this.current.substring(0, this.current.length - 1);
     console.log("del last");
+    this.lastOperation = InputType.Number;
   }
 
   public OneOverX() {
@@ -177,12 +196,14 @@ export class AppComponent {
     }
 
     this.current = '' + (1 / currentNum);
+    this.lastOperation = InputType.Operation;
   }
 
   public Square() {
     console.log("^2");
     var currentNum: number = parseFloat(this.current);
     this.current = '' + (currentNum * currentNum);
+    this.lastOperation = InputType.Operation;
   }
 
   public Root() {
@@ -190,15 +211,16 @@ export class AppComponent {
     var currentNum: number = parseFloat(this.current);
 
     this.current = '' + (Math.sqrt(currentNum));
+    this.lastOperation = InputType.Operation;
   }
 
   /**
    * OnKeyPress
 key:string   */
-  public OnKeyPressed(event: any) {
+  public OnKeyPressed(key: string) {
     console.log("key press");
-    console.log(event);
-    var key: string = event.key;
+    // // console.log(event);
+    // // var key: string = event.key;
     switch (key) {
       case '0':
       case '1':
@@ -243,58 +265,18 @@ key:string   */
         break;
     }
 
-    if( this.entries[this.entries.length-1].constructor.name == "NumericEntry"){
+    if (this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
       this.entries.push(new OperationEntry(this.operation));
     }
-    console.log(this.entries);
 
+    console.log(this.entries);
   }
 
   public OnKeyDownInput(event: any) {
     console.log("key dn");
     console.log(event);
-    this.OnKeyPressed(event);
+    this.OnKeyPressed(event.key);
     event.stopPropagation();
     event.preventDefault();
-    // var key: string = event.key;
-    // switch (key) {
-    //   case '/':
-    //     this.Divide();
-    //     event.cancelBubble = true;
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     break;
-    //   case '*':
-    //     this.Multiply();
-    //     event.cancelBubble = true;
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     break;
-    //   case '-':
-    //     this.Subtract();
-    //     event.cancelBubble = true;
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     break;
-    //   case '+':
-    //     this.Add();
-    //     event.cancelBubble = true;
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     break;
-    //   case '=':
-    //   case 'Enter':
-    //     this.Calculate();
-    //     break;
-    //   case 'Escape':
-    //     this.ClearAll();
-    //     break;
-    //   case 'Backspace':
-    //     this.DeleteLast();
-    //     break;
-    //   default:
-    //     break;
-    // }
-
   }
 }
