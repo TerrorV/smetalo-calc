@@ -3,6 +3,7 @@ import { Entry } from './entities/entry';
 import { InputType } from './entities/input-type';
 import { NumericEntry } from './entities/numeric-entry';
 import { OperationEntry } from './entities/operation-entry';
+import { HistoryService } from './services/history-service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,14 @@ export class AppComponent {
   entries: Entry[] = [];
 
   lastOperation: InputType = InputType.Number;
+
+  /**
+   *
+   */
+  constructor(private historySvc :HistoryService) {
+    
+    
+  }
   /**
    * Enter
    */
@@ -112,6 +121,7 @@ export class AppComponent {
     }
 
     this.currentNum = parseFloat(this.current);
+    this.accumulator=this.currentNum;
     this.entries.push(new NumericEntry(this.accumulator));
     this.Calculate();
     this.current = '0';
@@ -231,9 +241,13 @@ export class AppComponent {
         return;
     }
     const key = event.key;
+    this.ProcessKeyPress(key);
+  }
+
+  public ProcessKeyPress(key: string) {
     // // console.log(event);
     // // var key: string = event.key;
-
+    this.historySvc.ProcessInput(key);
     switch (key) {
       case '0':
       case '1':
@@ -283,8 +297,8 @@ export class AppComponent {
     }
   }
 
-  onInputKeyDown(e) {
-      this.OnKeyPressed(e);
-      e.handled = true;
-  }
+  // // onInputKeyDown(e) {
+  // //     this.OnKeyPressed(e);
+  // //     e.handled = true;
+  // // }
 }
