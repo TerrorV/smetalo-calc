@@ -5,20 +5,41 @@ import { OperationEntry } from '../entities/operation-entry';
 
 @Injectable()
 export class HistoryService {
-    entries: Entry[] = [];
+    public entries: Entry[] = [];
     operation: string = "";
-    current: string = '0';
+    public current: string = '0';
     lastIsNumber: boolean = true;
 
     constructor() {
 
     }
 
+    public AddElement(entry: Entry) {
+        if (entry.constructor.name == 'OperationEntry') {
+            // this.entries.push(new NumericEntry(parseFloat(this.current)));
+        }
+        else {
+            this.entries.push(new OperationEntry(this.operation));
+
+            this.current = (entry as NumericEntry).value.toString();
+        }
+
+        this.entries.push(entry);
+    }
     /**
      * ProcessInput
      */
     public ProcessInput(key: string) {
         switch (key) {
+            case 'Escape':
+                this.Clear();
+                break;
+            case 'Backspace':
+                this.DeleteLast();
+                break;
+            case 'inv':
+                this.InvertSign();
+                break;
             case '0':
             case '1':
             case '2':
@@ -49,7 +70,7 @@ export class HistoryService {
         console.log(this.entries);
     }
 
-    ProcessNumber(input: string) {
+    private ProcessNumber(input: string) {
         if (input == '.' && this.current.indexOf('.') < 0) {
             if (this.current == '')
                 this.current = '0';
@@ -63,14 +84,14 @@ export class HistoryService {
         }
 
         this.current += input;
-        if (!this.lastIsNumber) {
+        if (!this.lastIsNumber && this.operation !== '') {
             this.entries.push(new OperationEntry(this.operation));
         }
 
         this.lastIsNumber = true;
     }
 
-    ProcessOperation(key: string) {
+    private ProcessOperation(key: string) {
         this.operation = key;
         if (this.lastIsNumber) {
             var currentNum: number = parseFloat(this.current);
@@ -80,4 +101,51 @@ export class HistoryService {
 
         this.lastIsNumber = false;
     }
+
+    private InvertSign() {
+        console.log("Inv");
+        if (this.current[0] == "-") {
+            this.current = this.current.substring(1);
+        }
+        else {
+            this.current = '-' + this.current;
+        }
+        // this.lastOperation = InputType.Number;
+    }
+
+    private DeleteLast() {
+        this.current = this.current.substring(0, this.current.length - 1);
+        console.log("del last");
+        //  this.lastOperation = InputType.Number;
+    }
+
+    private Clear() {
+        this.current = '0';
+        //this.operation = '';
+    }
+
+    /**
+     * GetLastTransaction
+     */
+    public GetLastTransaction(): Entry[] {
+        var transaction: Entry[] = [];
+        for (let index = this.entries.length - 1; index > -1; index--) {
+            const element = this.entries[index] as OperationEntry;
+
+
+            if (element.value == '=') {
+                if(index == this.entries.length - 1){
+                    continue;
+                }
+                else{
+                    break;
+                }
+            }
+
+            transaction.push(element);
+        }
+
+        return transaction.reverse();
+    }
+
 }
