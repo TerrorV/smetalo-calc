@@ -196,6 +196,8 @@ export class AppComponent {
   }
 
   public ClearAll() {
+    this.historySvc.RemoveLastTransaction();
+    this.historySvc.ProcessInput('Escape');
     this.current = '0';
     this.accumulator = 0;
     this.operation = '';
