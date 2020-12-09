@@ -30,6 +30,7 @@ export class HistoryService {
      * ProcessInput
      */
     public ProcessInput(key: string) {
+        console.log(this.lastIsNumber);
         switch (key) {
             case 'Escape':
                 this.Clear();
@@ -71,6 +72,12 @@ export class HistoryService {
     }
 
     private ProcessNumber(input: string) {
+        
+        if (!this.lastIsNumber && this.operation !== '') {
+            this.entries.push(new OperationEntry(this.operation));
+            this.Clear();
+        }
+        
         if (input == '.' && this.current.indexOf('.') < 0) {
             if (this.current == '')
                 this.current = '0';
@@ -83,10 +90,9 @@ export class HistoryService {
             this.current = '';
         }
 
+
         this.current += input;
-        if (!this.lastIsNumber && this.operation !== '') {
-            this.entries.push(new OperationEntry(this.operation));
-        }
+
 
         this.lastIsNumber = true;
     }
@@ -134,10 +140,10 @@ export class HistoryService {
 
 
             if (element.value == '=') {
-                if(index == this.entries.length - 1){
+                if (index == this.entries.length - 1) {
                     continue;
                 }
-                else{
+                else {
                     break;
                 }
             }
@@ -146,6 +152,12 @@ export class HistoryService {
         }
 
         return transaction.reverse();
+    }
+
+    public RemoveLastTransaction() {
+        var len: number = this.GetLastTransaction().length;
+        this.entries = this.entries.slice(this.entries.length - len);
+
     }
 
 }
