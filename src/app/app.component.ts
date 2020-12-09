@@ -23,9 +23,9 @@ export class AppComponent {
   /**
    *
    */
-  constructor(private historySvc :HistoryService) {
-    
-    
+  constructor(public historySvc: HistoryService) {
+
+
   }
   /**
    * Enter
@@ -60,6 +60,8 @@ export class AppComponent {
    * Equals
    */
   public Equals() {
+    //this.historySvc.AddElement(new OperationEntry('='));
+    this.historySvc.AddElement(new NumericEntry(this.Calculate()));
     if (this.operation == '=') {
 
       // this.operation = (this.entries[this.entries.length - 3] as OperationEntry).value;
@@ -76,42 +78,54 @@ export class AppComponent {
     this.lastOperation = InputType.Operation;
   }
 
-    public Calculate() {
-      this.currentNum = parseFloat(this.current);
-      if (this.operation == '/' && this.currentNum == 0) {
-        return;
+  public Calculate():number {
+    var trans = this.historySvc.GetLastTransaction();
+    var result: number = 0;
+    for (let index = 0; index < trans.length; index++) {
+      const element = trans[index];
+      switch (element.constructor.name) {
+        case 'NumericEntry':
+          result = (element as NumericEntry).value;
+          break;
+        case 'OperationEntry':
+          result = this.ExecuteCalculation(result, (trans[index + 1] as NumericEntry).value, element as OperationEntry);
+          index++;
+          break;
+        default:
+          break;
       }
-  
+    }
+
+    return result;
   }
 
-  public ExecuteCalculation(accumulator: number, current:number)
-  {
+  public ExecuteCalculation(accumulator: number, current: number, operation: OperationEntry): number {
 
-    this.currentNum = parseFloat(this.current);
-    if (this.operation == '/' && this.currentNum == 0) {
-      return;
-    }
+    // this.currentNum = parseFloat(this.current);
+    // if (this.operation == '/' && this.currentNum == 0) {
+    //   return;
+    // }
 
-    switch (this.operation) {
+    switch (operation.value) {
       case '+':
-        this.current = '' + (this.accumulator + this.currentNum);
-        break;
+        return (accumulator + current);
       case '-':
-        this.current = '' + (this.accumulator - this.currentNum);
-        break;
+        return (accumulator - current);
       case '*':
-        this.current = '' + (this.accumulator * this.currentNum);
-        break;
+        return (accumulator * current);
       case '/':
-        this.current = '' + (this.accumulator / this.currentNum);
-        break;
+        if (current == 0) {
+          throw new Error("Division by zero");
+        }
+
+        return (accumulator / current);
 
       default:
-        break;
+        throw new Error("Not implemented");
     }
 
-    // this.operation = '=';
-    console.log("Eq");
+    // // this.operation = '=';
+    // console.log("Eq");
 
   }
 
@@ -121,9 +135,9 @@ export class AppComponent {
     }
 
     this.currentNum = parseFloat(this.current);
-    this.accumulator=this.currentNum;
+    this.accumulator = this.currentNum;
     this.entries.push(new NumericEntry(this.accumulator));
-    this.Calculate();
+    //this.Calculate();
     this.current = '0';
 
     console.log(this.entries);
@@ -190,6 +204,7 @@ export class AppComponent {
   }
 
   public InvertSign() {
+    // this.historySvc.ProcessInput('inv');
     console.log("Inv");
     if (this.current[0] == "-") {
       this.current = this.current.substring(1);
@@ -238,7 +253,7 @@ export class AppComponent {
   @HostListener('document:keydown', ['$event'])
   public OnKeyPressed(event: any) {
     if (event.handled) {
-        return;
+      return;
     }
     const key = event.key;
     this.ProcessKeyPress(key);
@@ -288,11 +303,13 @@ export class AppComponent {
       case 'Backspace':
         this.DeleteLast();
         break;
+      case 'inv':
+        this.InvertSign();
       default:
         break;
     }
 
-    if (this.entries.length>0 && this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
+    if (this.entries.length > 0 && this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
       this.entries.push(new OperationEntry(this.operation));
     }
   }
