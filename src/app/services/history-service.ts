@@ -104,7 +104,7 @@ export class HistoryService {
             this.entries.push(new NumericEntry(currentNum));
             this.current = '0';
         }
-
+        
         this.lastIsNumber = false;
     }
 
