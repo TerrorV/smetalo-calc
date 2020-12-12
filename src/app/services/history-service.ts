@@ -15,10 +15,10 @@ export class HistoryService {
     }
 
     public AddElement(entry: Entry) {
-        if(this.entries.length > 0 && entry.constructor.name == 'NumericEntry' &&  this.entries[this.entries.length-1].constructor.name == 'NumericEntry'){
+        if (this.entries.length > 0 && entry.constructor.name == 'NumericEntry' && this.entries[this.entries.length - 1].constructor.name == 'NumericEntry') {
             this.entries.push(new OperationEntry(''));
         }
-        
+
         this.entries.push(entry);
 
         if (entry.constructor.name == 'OperationEntry') {
@@ -28,7 +28,7 @@ export class HistoryService {
         else {
             //this.current = '0';
             //this.entries.push(new OperationEntry(this.operation));
-            
+
 
             this.current = (entry as NumericEntry).value.toString();
         }
@@ -89,10 +89,15 @@ export class HistoryService {
             this.Clear();
         }
 
+        this.lastIsNumber = true;
         if (input == '.' && this.current.indexOf('.') < 0) {
             if (this.current == '')
                 this.current = '0';
             this.current += '.';
+            return;
+        }
+        else if(input == '.'){
+            return;
         }
         else if (input == '0' && this.current == '0') {
             return;
@@ -101,11 +106,7 @@ export class HistoryService {
             this.current = '';
         }
 
-
         this.current += input;
-
-
-        this.lastIsNumber = true;
     }
 
     private ProcessOperation(key: string) {
@@ -122,7 +123,7 @@ export class HistoryService {
         if (key == '=') {
             this.AddElement(new OperationEntry(key));
         }
-        
+
         this.lastIsNumber = false;
     }
 
@@ -139,6 +140,10 @@ export class HistoryService {
 
     private DeleteLast() {
         this.current = this.current.substring(0, this.current.length - 1);
+        if(this.current.length == 0){
+            this.current='0';
+        }
+        
         console.log("del last");
         //  this.lastOperation = InputType.Number;
     }
@@ -198,6 +203,7 @@ export class HistoryService {
             const element = this.entries[index] as OperationEntry;
 
 
+            // if (element.value == '' || index >= -1) {
             if (element.value == '') {
                 transactions.push(currentTrans.reverse());
                 currentTrans = [];
@@ -206,7 +212,8 @@ export class HistoryService {
             currentTrans.push(element);
         }
 
-        return transactions;
+        transactions.push(currentTrans.reverse());
+        return transactions.reverse();
     }
 
     public RemoveLastTransaction() {
