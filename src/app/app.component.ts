@@ -31,24 +31,24 @@ export class AppComponent {
    * Enter
    */
   public Enter(input: string) {
-    if (input == '.' && this.current.indexOf('.') < 0) {
-      if (this.current == '')
-        this.current = '0';
-      this.current += '.';
-    }
-    else if (input == '0' && this.current == '0') {
-      return;
-    }
-    else if (input !== '.') {
-      if (this.current == '0') {
-        this.current = '';
-      }
+    // if (input == '.' && this.current.indexOf('.') < 0) {
+    //   if (this.current == '')
+    //     this.current = '0';
+    //   this.current += '.';
+    // }
+    // else if (input == '0' && this.current == '0') {
+    //   return;
+    // }
+    // else if (input !== '.') {
+    //   if (this.current == '0') {
+    //     this.current = '';
+    //   }
 
-      this.current += input;
-      console.log(input);
-    }
+    //   this.current += input;
+    //   console.log(input);
+    // }
 
-    this.lastOperation = InputType.Number;
+    // this.lastOperation = InputType.Number;
   }
 
 
