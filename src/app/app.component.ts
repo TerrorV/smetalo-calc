@@ -60,28 +60,17 @@ export class AppComponent {
    * Equals
    */
   public Equals() {
-    //this.historySvc.AddElement(new OperationEntry('='));
+    
     this.historySvc.AddElement(new NumericEntry(this.Calculate()));
-    //this.historySvc.operation = '';
+    
     this.operation = '';
     if (this.operation == '=') {
-
-      // this.operation = (this.entries[this.entries.length - 3] as OperationEntry).value;
-      // this.accumulator = (this.entries[this.entries.length - 2] as NumericEntry).value;
+   
     }
-
-    // this.currentNum = parseFloat(this.current);
-    // var tempAcc: number = this.accumulator;
-    // //this.Calculate();
-    // this.TransferNumberToAccumulator();
-    // this.operation = '=';
-    // this.TransferOperationToAccumulator();
-    // //this.accumulator = tempCurr;
-    // this.lastOperation = InputType.Operation;
-  }
+ }
 
   public Calculate(): number {
-    var trans = this.historySvc.GetLastTransaction2();
+    var trans = this.historySvc.GetLastTransaction();
     // var trans = this.historySvc.GetLastTransaction();
     var result: number = 0;
     for (let index = 0; index < trans.length; index++) {
