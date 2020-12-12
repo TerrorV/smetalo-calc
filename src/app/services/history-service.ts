@@ -96,7 +96,7 @@ export class HistoryService {
             this.current += '.';
             return;
         }
-        else if(input == '.'){
+        else if (input == '.') {
             return;
         }
         else if (input == '0' && this.current == '0') {
@@ -140,10 +140,10 @@ export class HistoryService {
 
     private DeleteLast() {
         this.current = this.current.substring(0, this.current.length - 1);
-        if(this.current.length == 0){
-            this.current='0';
+        if (this.current.length == 0) {
+            this.current = '0';
         }
-        
+
         console.log("del last");
         //  this.lastOperation = InputType.Number;
     }
@@ -153,35 +153,10 @@ export class HistoryService {
         //this.operation = '';
     }
 
-    /**
-     * GetLastTransaction
-     */
     public GetLastTransaction(): Entry[] {
         var transaction: Entry[] = [];
         for (let index = this.entries.length - 1; index > -1; index--) {
             const element = this.entries[index] as OperationEntry;
-
-
-            if (element.value == '=') {
-                if (index == this.entries.length - 1) {
-                    continue;
-                }
-                else {
-                    break;
-                }
-            }
-
-            transaction.push(element);
-        }
-
-        return transaction.reverse();
-    }
-
-    public GetLastTransaction2(): Entry[] {
-        var transaction: Entry[] = [];
-        for (let index = this.entries.length - 1; index > -1; index--) {
-            const element = this.entries[index] as OperationEntry;
-
 
             if (element.value == '') {
                 break;
