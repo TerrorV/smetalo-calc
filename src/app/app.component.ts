@@ -62,7 +62,7 @@ export class AppComponent {
   public Equals() {
     //this.historySvc.AddElement(new OperationEntry('='));
     this.historySvc.AddElement(new NumericEntry(this.Calculate()));
-    this.historySvc.operation = '';
+    //this.historySvc.operation = '';
     this.operation = '';
     if (this.operation == '=') {
 
@@ -121,7 +121,8 @@ export class AppComponent {
         }
 
         return (accumulator / current);
-
+      case '':
+        return current;
       default:
         throw new Error("Not implemented");
     }

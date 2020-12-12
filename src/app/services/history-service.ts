@@ -15,16 +15,19 @@ export class HistoryService {
     }
 
     public AddElement(entry: Entry) {
+        this.entries.push(entry);
+
         if (entry.constructor.name == 'OperationEntry') {
+            this.operation='';
             // this.entries.push(new NumericEntry(parseFloat(this.current)));
         }
         else {
-            this.entries.push(new OperationEntry(this.operation));
-
+            this.current='0';
+            //this.entries.push(new OperationEntry(this.operation));
+            
             this.current = (entry as NumericEntry).value.toString();
         }
 
-        this.entries.push(entry);
     }
     /**
      * ProcessInput
@@ -68,13 +71,16 @@ export class HistoryService {
                 break;
         }
 
+        console.log(key);
         console.log(this.entries);
     }
 
     private ProcessNumber(input: string) {
         
-        if (!this.lastIsNumber && this.operation !== '') {
-            this.entries.push(new OperationEntry(this.operation));
+        // if (!this.lastIsNumber && this.operation !== '') {
+            if (!this.lastIsNumber ) {
+            this.AddElement(new OperationEntry(this.operation));
+            //this.entries.push(new OperationEntry(this.operation));
             this.Clear();
         }
         
@@ -99,10 +105,15 @@ export class HistoryService {
 
     private ProcessOperation(key: string) {
         this.operation = key;
-        if (this.lastIsNumber) {
+        if (this.lastIsNumber ) {
             var currentNum: number = parseFloat(this.current);
-            this.entries.push(new NumericEntry(currentNum));
-            this.current = '0';
+            this.AddElement(new NumericEntry(currentNum));
+            // this.entries.push(new NumericEntry(currentNum));
+            //this.current = '0';
+        }
+
+        if(key=='='){
+            this.AddElement(new OperationEntry(this.operation));
         }
         
         this.lastIsNumber = false;
