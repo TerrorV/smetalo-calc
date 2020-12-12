@@ -81,7 +81,8 @@ export class AppComponent {
   }
 
   public Calculate(): number {
-    var trans = this.historySvc.GetLastTransaction();
+    var trans = this.historySvc.GetLastTransaction2();
+    // var trans = this.historySvc.GetLastTransaction();
     var result: number = 0;
     for (let index = 0; index < trans.length; index++) {
       const element = trans[index];
@@ -90,6 +91,10 @@ export class AppComponent {
           result = (element as NumericEntry).value;
           break;
         case 'OperationEntry':
+          if ((element as OperationEntry).value == '=') {
+            continue;
+          }
+
           result = this.ExecuteCalculation(result, (trans[index + 1] as NumericEntry).value, element as OperationEntry);
           index++;
           break;

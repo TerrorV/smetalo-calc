@@ -15,16 +15,21 @@ export class HistoryService {
     }
 
     public AddElement(entry: Entry) {
+        if(this.entries.length > 0 && entry.constructor.name == 'NumericEntry' &&  this.entries[this.entries.length-1].constructor.name == 'NumericEntry'){
+            this.entries.push(new OperationEntry(''));
+        }
+        
         this.entries.push(entry);
 
         if (entry.constructor.name == 'OperationEntry') {
-            this.operation='';
+            this.operation = '';
             // this.entries.push(new NumericEntry(parseFloat(this.current)));
         }
         else {
-            this.current='0';
+            //this.current = '0';
             //this.entries.push(new OperationEntry(this.operation));
             
+
             this.current = (entry as NumericEntry).value.toString();
         }
 
@@ -76,14 +81,14 @@ export class HistoryService {
     }
 
     private ProcessNumber(input: string) {
-        
+
         // if (!this.lastIsNumber && this.operation !== '') {
-            if (!this.lastIsNumber ) {
+        if (!this.lastIsNumber) {
             this.AddElement(new OperationEntry(this.operation));
             //this.entries.push(new OperationEntry(this.operation));
             this.Clear();
         }
-        
+
         if (input == '.' && this.current.indexOf('.') < 0) {
             if (this.current == '')
                 this.current = '0';
@@ -104,16 +109,18 @@ export class HistoryService {
     }
 
     private ProcessOperation(key: string) {
-        this.operation = key;
-        if (this.lastIsNumber ) {
+        console.log("Last Op:" + this.operation);
+        if (this.lastIsNumber || this.operation == '') {
             var currentNum: number = parseFloat(this.current);
             this.AddElement(new NumericEntry(currentNum));
             // this.entries.push(new NumericEntry(currentNum));
             //this.current = '0';
         }
 
-        if(key=='='){
-            this.AddElement(new OperationEntry(this.operation));
+        this.operation = key;
+
+        if (key == '=') {
+            this.AddElement(new OperationEntry(key));
         }
         
         this.lastIsNumber = false;
@@ -163,6 +170,43 @@ export class HistoryService {
         }
 
         return transaction.reverse();
+    }
+
+    public GetLastTransaction2(): Entry[] {
+        var transaction: Entry[] = [];
+        for (let index = this.entries.length - 1; index > -1; index--) {
+            const element = this.entries[index] as OperationEntry;
+
+
+            if (element.value == '') {
+                break;
+            }
+
+            transaction.push(element);
+        }
+
+        return transaction.reverse();
+    }
+
+    /**
+     * GetListOfTransactions
+     */
+    public GetListOfTransactions(): Entry[][] {
+        var transactions: Entry[][] = [];
+        var currentTrans: Entry[] = [];
+        for (let index = this.entries.length - 1; index > -1; index--) {
+            const element = this.entries[index] as OperationEntry;
+
+
+            if (element.value == '') {
+                transactions.push(currentTrans.reverse());
+                currentTrans = [];
+            }
+
+            currentTrans.push(element);
+        }
+
+        return transactions;
     }
 
     public RemoveLastTransaction() {
