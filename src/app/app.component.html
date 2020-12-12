@@ -48,8 +48,11 @@
     </div>
     <div class="calculator__history">
         <p><span *ngIf="operation!=''" >{{accumulator}} {{operation}} {{current}}</span>&nbsp;</p>
-        <div *ngFor="let entry of historySvc.entries">
-            {{entry.value}}
+        <div *ngFor="let trans of historySvc.GetListOfTransactions()">
+            <span *ngFor="let entry of trans">{{entry.value}}</span>
         </div>
+        <!-- <div *ngFor="let entry of historySvc.entries">
+            {{entry.value}}
+        </div> -->
     </div>
 </div>
