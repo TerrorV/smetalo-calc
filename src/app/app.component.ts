@@ -222,28 +222,25 @@ export class AppComponent {
 
   public OneOverX() {
     console.log("1/x");
-    this.currentNum = parseFloat(this.current);
+    this.currentNum = parseFloat(this.historySvc.current);
     if (this.currentNum === 0) {
       return;
     }
 
-    this.current = '' + (1 / this.currentNum);
-    this.lastOperation = InputType.Operation;
+    this.historySvc.current = '' + (1 / this.currentNum);
   }
 
   public Square() {
     console.log("^2");
-    this.currentNum = parseFloat(this.current);
-    this.current = '' + (this.currentNum * this.currentNum);
-    this.lastOperation = InputType.Operation;
+    this.currentNum = parseFloat(this.historySvc.current);
+    this.historySvc.current = '' + (this.currentNum * this.currentNum);
   }
 
   public Root() {
     console.log("sqrt");
-    this.currentNum = parseFloat(this.current);
+    this.currentNum = parseFloat(this.historySvc.current);
 
-    this.current = '' + (Math.sqrt(this.currentNum));
-    this.lastOperation = InputType.Operation;
+    this.historySvc.current = '' + (Math.sqrt(this.currentNum));
   }
 
   /**
