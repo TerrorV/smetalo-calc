@@ -154,18 +154,35 @@ export class HistoryService {
     }
 
     public GetLastTransaction(): Entry[] {
-        var transaction: Entry[] = [];
+        // var transaction: Entry[] = [];
+        // for (let index = this.entries.length - 1; index > -1; index--) {
+        //     const element = this.entries[index] as OperationEntry;
+
+        //     if (element.value == '') {
+        //         break;
+        //     }
+
+        //     transaction.push(element);
+        // }
+
+        // return transaction.reverse();
+
+
+
+        var currentTrans: Entry[] = [];
         for (let index = this.entries.length - 1; index > -1; index--) {
             const element = this.entries[index] as OperationEntry;
 
-            if (element.value == '') {
+
+            // if (element.value == '' || index >= -1) {
+            if (element.value === '') {
                 break;
             }
 
-            transaction.push(element);
+            currentTrans.push(element);
         }
 
-        return transaction.reverse();
+        return currentTrans.reverse();
     }
 
     /**
@@ -179,7 +196,7 @@ export class HistoryService {
 
 
             // if (element.value == '' || index >= -1) {
-            if (element.value == '') {
+            if (element.value === '') {
                 transactions.push(currentTrans.reverse());
                 currentTrans = [];
             }
@@ -188,12 +205,14 @@ export class HistoryService {
         }
 
         transactions.push(currentTrans.reverse());
-        return transactions.reverse();
+        console.log(transactions);
+        return transactions;
     }
 
     public RemoveLastTransaction() {
         var len: number = this.GetLastTransaction().length;
-        this.entries = this.entries.slice(this.entries.length - len);
+        console.log(len);
+        this.entries = this.entries.slice(0,this.entries.length - len);
 
     }
 
