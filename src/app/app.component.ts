@@ -16,7 +16,7 @@ export class AppComponent {
   currentNum: number = 0;
   accumulator: number = 0;
   operation: string = "";
-  entries: Entry[] = [];
+  //entries: Entry[] = [];
 
   lastOperation: InputType = InputType.Number;
 
@@ -52,9 +52,9 @@ export class AppComponent {
   }
 
 
-  TransferOperationToAccumulator() {
-    this.entries.push(new OperationEntry(this.operation));
-  }
+  // TransferOperationToAccumulator() {
+  //   this.entries.push(new OperationEntry(this.operation));
+  // }
 
   /**
    * Equals
@@ -126,25 +126,25 @@ export class AppComponent {
 
   }
 
-  private TransferNumberToAccumulator() {
-    if (this.lastOperation == InputType.Operation) {
-      return;
-    }
+  // private TransferNumberToAccumulator() {
+  //   if (this.lastOperation == InputType.Operation) {
+  //     return;
+  //   }
 
-    this.currentNum = parseFloat(this.current);
-    this.accumulator = this.currentNum;
-    this.entries.push(new NumericEntry(this.accumulator));
-    //this.Calculate();
-    this.current = '0';
+  //   this.currentNum = parseFloat(this.current);
+  //   this.accumulator = this.currentNum;
+  //   this.entries.push(new NumericEntry(this.accumulator));
+  //   //this.Calculate();
+  //   this.current = '0';
 
-    console.log(this.entries);
-  }
+  //   console.log(this.entries);
+  // }
 
   public Add() {
-    this.TransferNumberToAccumulator();
-    console.log("Add");
-    this.operation = "+"
-    this.lastOperation = InputType.Operation;
+    // this.TransferNumberToAccumulator();
+    // console.log("Add");
+    // this.operation = "+"
+    // this.lastOperation = InputType.Operation;
 
   }
 
@@ -303,10 +303,6 @@ export class AppComponent {
         this.InvertSign();
       default:
         break;
-    }
-
-    if (this.entries.length > 0 && this.entries[this.entries.length - 1].constructor.name == "NumericEntry") {
-      this.entries.push(new OperationEntry(this.operation));
     }
   }
 
