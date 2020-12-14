@@ -10,7 +10,7 @@
                         <td class="calculator__keypad-operation" (click)="ClearAll()" >C</td>
                         <td class="calculator__keypad-operation" (click)="ProcessKeyPress('Escape')">CE</td>
                         <td class="calculator__keypad-operation" (click)="Percent()">%</td>
-                        <td class="calculator__keypad-operation"  (click)="DeleteLast()">&lt;=</td>
+                        <td class="calculator__keypad-operation"  (click)="ProcessKeyPress('Backspace')">&lt;=</td>
                     </tr>
                     <tr>
                         <td class="calculator__keypad-operation" (click)="OneOverX()" >1/x</td>
