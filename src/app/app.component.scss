@@ -7,7 +7,13 @@
 }
 
 .calculator__history {
-    flex: 1 1 33.33%;
+    @media screen and (min-width: 651px) { 
+        display: initial;
+        flex: 1 1 33.33%;
+      }
+    @media screen and (max-width: 650px) { 
+        display: none !important;
+    }
 }
 
 .calculator__input-container {
@@ -16,6 +22,11 @@
     .calculator__input {
         width: 100%;
         font-size: 40px;
+        text-align: right;
+    }
+
+    .calculator__current-trans {
+        font-size: 30px;
         text-align: right;
     }
 }
