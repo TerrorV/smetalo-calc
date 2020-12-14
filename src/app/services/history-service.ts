@@ -216,4 +216,24 @@ export class HistoryService {
 
     }
 
+    /**
+     * GetLastOperation
+    :OperationEntry    */
+    public GetLastOperation():OperationEntry {
+        for (let index = this.entries.length; index==0; index--) {
+            const element = this.entries[index];
+            if(element.constructor.name=='OperationEntry'){
+                return element as OperationEntry;
+            }
+        }
+
+        return new OperationEntry('');
+    }
+
+    /**
+     * GetLastEntry
+     */
+    public GetLastEntry(): Entry {
+        return this.entries[this.entries.length -1];
+    }
 }
