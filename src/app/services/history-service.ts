@@ -229,6 +229,26 @@ export class HistoryService {
 
         return new OperationEntry('');
     }
+    /**
+     * GetLastOperation
+    :OperationEntry    */
+    // public GetLastOperation<T extends{GetName():string;new():Entry}>():T {
+        public GetLast<T extends Entry>(cls:{new (...args:any[]):T}):T {
+            var c:T = new cls();
+            console.log(c);
+            console.log('xxxx'+c.constructor.name);
+        for (let index = this.entries.length-1; index>-1; index--) {
+            
+            const element = this.entries[index];
+            if(element.constructor.name==c.constructor.name){
+                return element as T;
+            }
+        }
+
+        //return new T();
+    }
+
+
 
     /**
      * GetLastEntry
