@@ -54,7 +54,7 @@
     </div>
     <div class="calculator__history">   
 
-        <div *ngFor="let trans of historySvc.GetListOfTransactions()">
+        <div *ngFor="let trans of historySvc.GetListOfTransactions().slice(0,21)">
             <span *ngFor="let entry of trans">{{entry.value}}</span>
         </div>
         <!-- <div *ngFor="let entry of historySvc.entries">
