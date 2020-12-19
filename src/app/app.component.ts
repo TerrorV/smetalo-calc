@@ -38,7 +38,7 @@ export class AppComponent {
       this.historySvc.AddElement(new NumericEntry(parseFloat(this.historySvc.current)));
       trans = this.historySvc.GetLastTransaction();
     }
-
+    
     // // var isCompleted = this.Contains(trans, '=');
     var isCompleted = this.historySvc.LastTransIsComplete();
 
