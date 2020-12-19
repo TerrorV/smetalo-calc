@@ -11,6 +11,8 @@
         display: initial;
         flex: 1 1 33.33%;
         text-align: right;
+        margin-right: 5%;
+        margin-top: 100px;
       }
     @media screen and (max-width: 650px) { 
         display: none !important;
