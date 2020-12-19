@@ -12,10 +12,10 @@ import { HistoryService } from './services/history-service';
 })
 export class AppComponent {
   title = 'smetalo-calc';
-  current: string = '0';
-  currentNum: number = 0;
-  accumulator: number = 0;
-  operation: string = "";
+  //current: string = '0';
+  //currentNum: number = 0;
+  //accumulator: number = 0;
+  //operation: string = "";
   //entries: Entry[] = [];
 
   lastOperation: InputType = InputType.Number;
@@ -27,51 +27,61 @@ export class AppComponent {
 
 
   }
-  /**
-   * Enter
-   */
-  public Enter(input: string) {
-    // if (input == '.' && this.current.indexOf('.') < 0) {
-    //   if (this.current == '')
-    //     this.current = '0';
-    //   this.current += '.';
-    // }
-    // else if (input == '0' && this.current == '0') {
-    //   return;
-    // }
-    // else if (input !== '.') {
-    //   if (this.current == '0') {
-    //     this.current = '';
-    //   }
-
-    //   this.current += input;
-    //   console.log(input);
-    // }
-
-    // this.lastOperation = InputType.Number;
-  }
-
-
-  // TransferOperationToAccumulator() {
-  //   this.entries.push(new OperationEntry(this.operation));
-  // }
 
   /**
    * Equals
    */
   public Equals() {
-    
-    this.historySvc.AddElement(new NumericEntry(this.Calculate()));
-    
-    this.operation = '';
-    if (this.operation == '=') {
-   
-    }
- }
-
-  public Calculate(): number {
+    console.log(this.historySvc.GetLast(NumericEntry));
     var trans = this.historySvc.GetLastTransaction();
-    // var trans = this.historySvc.GetLastTransaction();
+    if(trans[trans.length - 1].constructor.name =='OperationEntry' && !this.historySvc.LastTransIsComplete()){
+      this.historySvc.AddElement(new NumericEntry(parseFloat(this.historySvc.current)));
+      trans = this.historySvc.GetLastTransaction();
+    }
+
+    // // var isCompleted = this.Contains(trans, '=');
+    var isCompleted = this.historySvc.LastTransIsComplete();
+
+    if (isCompleted) {
+      var newTrans: Entry[] = [];
+      var result: number = this.Calculate(trans);
+      newTrans.push(new NumericEntry(result));
+      newTrans.push(trans[trans.length - 5]);
+      newTrans.push(trans[trans.length - 4]);
+      for (const iterator of newTrans) {
+        this.historySvc.AddElement(iterator);
+      }
+      console.log(newTrans);
+    }
+
+    this.historySvc.AddElement(new OperationEntry('='));
+    this.historySvc.AddElement(new NumericEntry(this.CalculateCurrent()));
+    this.historySvc.AddElement(new OperationEntry(''));
+
+  }
+
+  private Contains<T extends { value: any }>(array: T[], value: string): boolean {
+    var hasEquals = false;
+    for (const iterator of array) {
+      if (iterator.value == value) {
+        hasEquals = true;
+        break;
+      }
+    }
+
+    if (hasEquals && array[array.length - 1].value !== '=') {
+      return true;
+    }
+
+    return false;
+  }
+
+  public CalculateCurrent(): number {
+    var trans = this.historySvc.GetLastTransaction();
+    return this.Calculate(trans);
+  }
+
+  public Calculate(trans: Entry[]): number {
     var result: number = 0;
     for (let index = 0; index < trans.length; index++) {
       const element = trans[index];
@@ -81,6 +91,7 @@ export class AppComponent {
           break;
         case 'OperationEntry':
           if ((element as OperationEntry).value == '=') {
+            index = trans.length;
             continue;
           }
 
@@ -96,12 +107,6 @@ export class AppComponent {
   }
 
   public ExecuteCalculation(accumulator: number, current: number, operation: OperationEntry): number {
-
-    // this.currentNum = parseFloat(this.current);
-    // if (this.operation == '/' && this.currentNum == 0) {
-    //   return;
-    // }
-
     switch (operation.value) {
       case '+':
         return (accumulator + current);
@@ -120,127 +125,46 @@ export class AppComponent {
       default:
         throw new Error("Not implemented");
     }
-
-    // // this.operation = '=';
-    // console.log("Eq");
-
-  }
-
-  // private TransferNumberToAccumulator() {
-  //   if (this.lastOperation == InputType.Operation) {
-  //     return;
-  //   }
-
-  //   this.currentNum = parseFloat(this.current);
-  //   this.accumulator = this.currentNum;
-  //   this.entries.push(new NumericEntry(this.accumulator));
-  //   //this.Calculate();
-  //   this.current = '0';
-
-  //   console.log(this.entries);
-  // }
-
-  public Add() {
-    // this.TransferNumberToAccumulator();
-    // console.log("Add");
-    // this.operation = "+"
-    // this.lastOperation = InputType.Operation;
-
-  }
-
-  public Subtract() {
-    // this.TransferNumberToAccumulator();
-    this.operation = "-"
-    console.log("Sub");
-    this.lastOperation = InputType.Operation;
-
-  }
-
-  public Multiply() {
-    //  this.TransferNumberToAccumulator();
-    this.operation = "*"
-
-    console.log("Mult");
-    this.lastOperation = InputType.Operation;
-
-  }
-
-  public Divide() {
-    //this.TransferNumberToAccumulator();
-    this.operation = "/"
-
-    console.log("Div");
-    this.lastOperation = InputType.Operation;
   }
 
   public Percent() {
-    // this.TransferToAccumulator();
-    // this.operation="%"
-    this.currentNum = parseFloat(this.current) * 0.01;
-
-    this.current = '' + this.accumulator * this.currentNum;
-
-    console.log("%");
-    this.lastOperation = InputType.Operation;
+    var currentNum: number = parseFloat(this.historySvc.current) * 0.01;
+    this.historySvc.current = (this.historySvc.GetLast(NumericEntry).value * currentNum).toString();
   }
 
   public Clear() {
-    this.current = "0";
-    //this.operation = "%"
-
-    console.log("clr");
-    this.lastOperation = InputType.Number;
+    this.historySvc.current = "0";
   }
 
   public ClearAll() {
+    console.log(this.historySvc.GetLast(NumericEntry));
+    console.log(this.historySvc.GetLast(OperationEntry));
     this.historySvc.RemoveLastTransaction();
     this.historySvc.ProcessInput('Escape');
-    this.current = '0';
-    this.accumulator = 0;
-    this.operation = '';
-    console.log("clra");
-    this.lastOperation = InputType.Number;
   }
 
-  public InvertSign() {
-    // this.historySvc.ProcessInput('inv');
-    console.log("Inv");
-    if (this.current[0] == "-") {
-      this.current = this.current.substring(1);
-    }
-    else {
-      this.current = '-' + this.current;
-    }
-    this.lastOperation = InputType.Number;
-  }
-
-  public DeleteLast() {
-    this.current = this.current.substring(0, this.current.length - 1);
-    console.log("del last");
-    this.lastOperation = InputType.Number;
-  }
 
   public OneOverX() {
     console.log("1/x");
-    this.currentNum = parseFloat(this.historySvc.current);
-    if (this.currentNum === 0) {
+    var currentNum: number = parseFloat(this.historySvc.current);
+    if (currentNum === 0) {
       return;
     }
 
-    this.historySvc.current = '' + (1 / this.currentNum);
+    this.historySvc.current = '' + (1 / currentNum);
   }
 
   public Square() {
     console.log("^2");
-    this.currentNum = parseFloat(this.historySvc.current);
-    this.historySvc.current = '' + (this.currentNum * this.currentNum);
+    var currentNum: number = parseFloat(this.historySvc.current);
+    this.historySvc.current = '' + (currentNum * currentNum);
   }
 
   public Root() {
     console.log("sqrt");
-    this.currentNum = parseFloat(this.historySvc.current);
+    var currentNum: number = parseFloat(this.historySvc.current);
 
-    this.historySvc.current = '' + (Math.sqrt(this.currentNum));
+    this.historySvc.current = '' + (Math.sqrt(currentNum));
   }
 
   /**
@@ -256,9 +180,25 @@ export class AppComponent {
   }
 
   public ProcessKeyPress(key: string) {
-    // // console.log(event);
-    // // var key: string = event.key;
     this.historySvc.ProcessInput(key);
+    switch (key) {
+      case '%':
+        this.Percent();
+        break;
+      case '=':
+      case 'Enter':
+        this.Equals();
+        break;
+      case 'Escape':
+        this.ClearAll();
+        break;
+      default:
+        break;
+    }
+
+    this.ProcessKeyByType(key);
+  }
+  ProcessKeyByType(key: string) {
     switch (key) {
       case '0':
       case '1':
@@ -271,43 +211,21 @@ export class AppComponent {
       case '8':
       case '9':
       case '.':
-        this.Enter(key);
         break;
       case '/':
-        this.Divide();
-        break;
       case '*':
-        this.Multiply();
-        break;
       case '-':
-        this.Subtract();
-        break;
       case '+':
-        this.Add();
-        break;
-      case '%':
-        this.Percent();
         break;
       case '=':
-      case 'Enter':
-        //this.Calculate();
-        this.Equals();
+      case '%':
         break;
-      case 'Escape':
-        this.ClearAll();
+      case 'sqrt':
+      case 'sqr':
+      case '1/x':
         break;
-      case 'Backspace':
-        this.DeleteLast();
-        break;
-      case 'inv':
-        this.InvertSign();
       default:
         break;
     }
   }
-
-  // // onInputKeyDown(e) {
-  // //     this.OnKeyPressed(e);
-  // //     e.handled = true;
-  // // }
 }
