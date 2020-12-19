@@ -68,7 +68,6 @@ export class HistoryService {
             case '*':
             case '-':
             case '+':
-            case '%':
             case '=':
                 this.ProcessOperation(key);
                 break;
