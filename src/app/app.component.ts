@@ -12,10 +12,10 @@ import { HistoryService } from './services/history-service';
 })
 export class AppComponent {
   title = 'smetalo-calc';
-  current: string = '0';
-  currentNum: number = 0;
-  accumulator: number = 0;
-  operation: string = "";
+  //current: string = '0';
+  //currentNum: number = 0;
+  //accumulator: number = 0;
+  //operation: string = "";
   //entries: Entry[] = [];
 
   lastOperation: InputType = InputType.Number;
@@ -47,10 +47,6 @@ export class AppComponent {
 
     this.historySvc.AddElement(new NumericEntry(this.CalculateCurrent()));
 
-    this.operation = '';
-    if (this.operation == '=') {
-
-    }
   }
 
   private Contains<T extends { value: any }>(array: T[], value: string): boolean {
@@ -75,8 +71,6 @@ export class AppComponent {
   }
 
   public Calculate(trans: Entry[]): number {
-
-    // var trans = this.historySvc.GetLastTransaction();
     var result: number = 0;
     for (let index = 0; index < trans.length; index++) {
       const element = trans[index];
@@ -101,12 +95,6 @@ export class AppComponent {
   }
 
   public ExecuteCalculation(accumulator: number, current: number, operation: OperationEntry): number {
-
-    // this.currentNum = parseFloat(this.current);
-    // if (this.operation == '/' && this.currentNum == 0) {
-    //   return;
-    // }
-
     switch (operation.value) {
       case '+':
         return (accumulator + current);
@@ -125,20 +113,15 @@ export class AppComponent {
       default:
         throw new Error("Not implemented");
     }
-
   }
 
   public Percent() {
-    this.currentNum = parseFloat(this.historySvc.current) * 0.01;
-    this.historySvc.current = (this.historySvc.GetLast(NumericEntry).value * this.currentNum).toString();
+    var currentNum:number = parseFloat(this.historySvc.current) * 0.01;
+    this.historySvc.current = (this.historySvc.GetLast(NumericEntry).value * currentNum).toString();
   }
 
   public Clear() {
-    this.current = "0";
-    //this.operation = "%"
-
-    console.log("clr");
-    this.lastOperation = InputType.Number;
+    this.historySvc.current = "0";
   }
 
   public ClearAll() {
@@ -146,35 +129,30 @@ export class AppComponent {
     console.log(this.historySvc.GetLast(OperationEntry));
     this.historySvc.RemoveLastTransaction();
     this.historySvc.ProcessInput('Escape');
-    this.current = '0';
-    this.accumulator = 0;
-    this.operation = '';
-    console.log("clra");
-    this.lastOperation = InputType.Number;
   }
 
 
   public OneOverX() {
     console.log("1/x");
-    this.currentNum = parseFloat(this.historySvc.current);
-    if (this.currentNum === 0) {
+    var currentNum:number = parseFloat(this.historySvc.current);
+    if (currentNum === 0) {
       return;
     }
 
-    this.historySvc.current = '' + (1 / this.currentNum);
+    this.historySvc.current = '' + (1 / currentNum);
   }
 
   public Square() {
     console.log("^2");
-    this.currentNum = parseFloat(this.historySvc.current);
-    this.historySvc.current = '' + (this.currentNum * this.currentNum);
+    var currentNum:number = parseFloat(this.historySvc.current);
+    this.historySvc.current = '' + (currentNum * currentNum);
   }
 
   public Root() {
     console.log("sqrt");
-    this.currentNum = parseFloat(this.historySvc.current);
+    var currentNum:number = parseFloat(this.historySvc.current);
 
-    this.historySvc.current = '' + (Math.sqrt(this.currentNum));
+    this.historySvc.current = '' + (Math.sqrt(currentNum));
   }
 
   /**
@@ -190,8 +168,6 @@ export class AppComponent {
   }
 
   public ProcessKeyPress(key: string) {
-    // // console.log(event);
-    // // var key: string = event.key;
     this.historySvc.ProcessInput(key);
     switch (key) {
       case '%':
@@ -199,7 +175,6 @@ export class AppComponent {
         break;
       case '=':
       case 'Enter':
-        //this.Calculate();
         this.Equals();
         break;
       case 'Escape':
