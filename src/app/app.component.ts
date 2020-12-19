@@ -60,8 +60,20 @@ export class AppComponent {
    * Equals
    */
   public Equals() {
+    console.log(  this.historySvc.GetLast(NumericEntry));
+    var trans = this.historySvc.GetLastTransaction();
+    var isCompleted =this.Contains( trans,'=');
+
+    if(isCompleted){
+      var newTrans: Entry[] = [];
+      var result:number = this.Calculate(trans);
+      newTrans.push(new NumericEntry(result));
+      newTrans.push(trans[trans.length - 4]);
+      newTrans.push(trans[trans.length - 3]);
+      console.log(newTrans);
+    }
     
-    this.historySvc.AddElement(new NumericEntry(this.Calculate()));
+    this.historySvc.AddElement(new NumericEntry(this.CalculateCurrent()));
     
     this.operation = '';
     if (this.operation == '=') {
@@ -69,8 +81,29 @@ export class AppComponent {
     }
  }
 
-  public Calculate(): number {
+ private Contains<T extends {value:any}>(array:T[], value:string):boolean {
+  var hasEquals = false; 
+  for (const iterator of array) {
+     if(iterator.value == value){
+       hasEquals = true;
+       break;
+     }
+   }
+   
+   if(hasEquals && array[array.length-1].value!=='='){
+    return true;
+   }
+
+   return false;
+ }
+
+  public CalculateCurrent(): number {
     var trans = this.historySvc.GetLastTransaction();
+    return this.Calculate(trans);
+  }
+
+  public Calculate(trans:Entry[]): number {
+
     // var trans = this.historySvc.GetLastTransaction();
     var result: number = 0;
     for (let index = 0; index < trans.length; index++) {
@@ -193,6 +226,8 @@ export class AppComponent {
   }
 
   public ClearAll() {
+    console.log(  this.historySvc.GetLast(NumericEntry));
+    console.log(  this.historySvc.GetLast(OperationEntry));
     this.historySvc.RemoveLastTransaction();
     this.historySvc.ProcessInput('Escape');
     this.current = '0';
