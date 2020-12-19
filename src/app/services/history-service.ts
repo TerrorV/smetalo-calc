@@ -62,13 +62,13 @@ export class HistoryService {
             case '.':
                 this.ProcessNumber(key);
                 break;
-            case 'Enter':
-                key = '=';
+            // case 'Enter':
+            //     key = '=';
             case '/':
             case '*':
             case '-':
             case '+':
-            case '=':
+                // case '=':
                 this.ProcessOperation(key);
                 break;
             default:
@@ -174,7 +174,7 @@ export class HistoryService {
 
 
             // if (element.value == '' || index >= -1) {
-            if (element.value === '') {
+            if (element.value === '' && index < this.entries.length - 1) {
                 break;
             }
 
@@ -211,17 +211,17 @@ export class HistoryService {
     public RemoveLastTransaction() {
         var len: number = this.GetLastTransaction().length;
         console.log(len);
-        this.entries = this.entries.slice(0,this.entries.length - len);
+        this.entries = this.entries.slice(0, this.entries.length - len);
 
     }
 
     /**
      * GetLastOperation
     :OperationEntry    */
-    public GetLastOperation():OperationEntry {
-        for (let index = this.entries.length; index==0; index--) {
+    public GetLastOperation(): OperationEntry {
+        for (let index = this.entries.length; index == 0; index--) {
             const element = this.entries[index];
-            if(element.constructor.name=='OperationEntry'){
+            if (element.constructor.name == 'OperationEntry') {
                 return element as OperationEntry;
             }
         }
@@ -232,14 +232,14 @@ export class HistoryService {
      * GetLastOperation
     :OperationEntry    */
     // public GetLastOperation<T extends{GetName():string;new():Entry}>():T {
-        public GetLast<T extends Entry>(cls:{new (...args:any[]):T}):T {
-            var c:T = new cls();
-            console.log(c);
-            console.log('xxxx'+c.constructor.name);
-        for (let index = this.entries.length-1; index>-1; index--) {
-            
+    public GetLast<T extends Entry>(cls: { new(...args: any[]): T }): T {
+        var c: T = new cls();
+        console.log(c);
+        console.log('xxxx' + c.constructor.name);
+        for (let index = this.entries.length - 1; index > -1; index--) {
+
             const element = this.entries[index];
-            if(element.constructor.name==c.constructor.name){
+            if (element.constructor.name == c.constructor.name) {
                 return element as T;
             }
         }
@@ -253,6 +253,25 @@ export class HistoryService {
      * GetLastEntry
      */
     public GetLastEntry(): Entry {
-        return this.entries[this.entries.length -1];
+        return this.entries[this.entries.length - 1];
+    }
+
+    /**
+     * LastTransIsComplete
+     */
+    public LastTransIsComplete():boolean {
+        var hasEquals = false;
+    for (const iterator of this.GetLastTransaction()) {
+      if (iterator.value == '=') {
+        hasEquals = true;
+        break;
+      }
+    }
+
+    if (hasEquals && this.GetLastEntry().value !== '=') {
+      return true;
+    }
+
+    return false;
     }
 }
