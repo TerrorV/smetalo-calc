@@ -23,6 +23,7 @@ export class HistoryService {
 
         if (entry.constructor.name == 'OperationEntry') {
             this.operation = '';
+            this.lastIsNumber=false;
             // this.entries.push(new NumericEntry(parseFloat(this.current)));
         }
         else {
