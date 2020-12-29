@@ -3,6 +3,7 @@ import { Entry } from './entities/entry';
 import { InputType } from './entities/input-type';
 import { NumericEntry } from './entities/numeric-entry';
 import { OperationEntry } from './entities/operation-entry';
+import { ComputeService } from './services/compute-service';
 import { HistoryService } from './services/history-service';
 
 @Component({
@@ -23,7 +24,7 @@ export class AppComponent {
   /**
    *
    */
-  constructor(public historySvc: HistoryService) {
+  constructor(public historySvc: HistoryService, public computeService : ComputeService) {
 
 
   }
@@ -82,28 +83,29 @@ export class AppComponent {
   }
 
   public Calculate(trans: Entry[]): number {
-    var result: number = 0;
-    for (let index = 0; index < trans.length; index++) {
-      const element = trans[index];
-      switch (element.constructor.name) {
-        case 'NumericEntry':
-          result = (element as NumericEntry).value;
-          break;
-        case 'OperationEntry':
-          if ((element as OperationEntry).value == '=') {
-            index = trans.length;
-            continue;
-          }
+    return this.computeService.Compute(trans.reverse());
+    // // var result: number = 0;
+    // // for (let index = 0; index < trans.length; index++) {
+    // //   const element = trans[index];
+    // //   switch (element.constructor.name) {
+    // //     case 'NumericEntry':
+    // //       result = (element as NumericEntry).value;
+    // //       break;
+    // //     case 'OperationEntry':
+    // //       if ((element as OperationEntry).value == '=') {
+    // //         index = trans.length;
+    // //         continue;
+    // //       }
 
-          result = this.ExecuteCalculation(result, (trans[index + 1] as NumericEntry).value, element as OperationEntry);
-          index++;
-          break;
-        default:
-          break;
-      }
-    }
+    // //       result = this.ExecuteCalculation(result, (trans[index + 1] as NumericEntry).value, element as OperationEntry);
+    // //       index++;
+    // //       break;
+    // //     default:
+    // //       break;
+    // //   }
+    // // }
 
-    return result;
+    // // return result;
   }
 
   public ExecuteCalculation(accumulator: number, current: number, operation: OperationEntry): number {
