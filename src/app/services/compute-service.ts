@@ -13,8 +13,12 @@ transaction: Entry[]     */
         transaction.reverse().splice(transaction.length - 1, 1);
         var tree: TreenNode = this.BuildTree(transaction);
         console.log(tree);
-
-        return this.GetValue(tree);
+        try {
+            return this.GetValue(tree);
+            
+        } catch (error) {
+            return Number.POSITIVE_INFINITY;
+        }
     }
 
     private GetValue(node: TreenNode): number {
