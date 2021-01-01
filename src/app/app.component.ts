@@ -45,7 +45,7 @@ export class AppComponent {
 
     if (isCompleted) {
       var newTrans: Entry[] = [];
-      var result: number = this.Calculate(trans);
+      var result: number =  trans[trans.length - 2].value as number;   //this.Calculate(trans);
       newTrans.push(new NumericEntry(result));
       newTrans.push(trans[trans.length - 5]);
       newTrans.push(trans[trans.length - 4]);
