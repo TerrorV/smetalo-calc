@@ -192,7 +192,7 @@ export class AppComponent {
         this.Equals();
         break;
       case 'Escape':
-        this.ClearAll();
+        this.Clear();
         break;
       default:
         break;
