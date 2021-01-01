@@ -1,6 +1,8 @@
 # SmetaloCalc
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.2.
+Web based calculator
+Latest version can be found deployed at https://wonderful-pebble-03ccd6b03.azurestaticapps.net/
 
 ## Development server
 
