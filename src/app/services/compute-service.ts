@@ -11,11 +11,14 @@ export class ComputeService {
 transaction: Entry[]     */
     public Compute(transaction: Entry[]): number {
         transaction.reverse().splice(transaction.length - 1, 1);
+        console.log(transaction);
+
         var tree: TreenNode = this.BuildTree(transaction);
         console.log(tree);
         try {
+            console.log( this.GetComputeArray(tree));
             return this.GetValue(tree);
-            
+
         } catch (error) {
             return Number.POSITIVE_INFINITY;
         }
@@ -28,7 +31,9 @@ transaction: Entry[]     */
         }
 
         if (node.left != null) {
-            result = this.ExecuteCalculation(result, this.GetValue(node.left), node.left.value);
+            var leftBranch =  this.GetComputeArray(node.left);
+            result = this.ExecuteSimpleCompute(leftBranch, result);
+            //result = this.ExecuteCalculation(result, this.GetValue(node.left), node.left.value);
             //left = this.GetValue(node.left);
         }
 
@@ -37,6 +42,47 @@ transaction: Entry[]     */
             result = this.ExecuteCalculation(result, this.GetValue(node.right), node.right.value);
         }
 
+        return result;
+    }
+
+    private ExecuteSimpleCompute(leftBranch: Entry[], initial: number) {
+        var result: number = initial;
+        for (let index = 0; index < leftBranch.length - 1; index += 2) {
+            const entry = leftBranch[index];
+            var operation: Entry = leftBranch[index + 1];
+            result = this.ExecuteCalculation(result, entry.value, operation);
+
+        }
+        return result;
+    }
+
+    private GetComputeArray(node: TreenNode): Entry[] {
+        var result: Entry[] = [];
+        if (node.value.constructor.name == 'OperationEntry') {
+            for (const entry of this.GetComputeArray(node.right)) {
+                result.push(entry);
+            }
+
+        result.push(node.value);
+
+            return result;
+        }
+
+        if (node.left != null) {
+            for (const entry of this.GetComputeArray(node.left)) {
+                result.push(entry);
+            }
+
+            //left = this.GetValue(node.left);
+        }
+
+        if (node.right != null) {
+            for (const entry of this.GetComputeArray(node.right)) {
+                result.push(entry);
+            }
+        }
+
+        result.push(node.value);
         return result;
     }
 
