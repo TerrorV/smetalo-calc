@@ -3,8 +3,8 @@ import { Entry } from './entities/entry';
 import { InputType } from './entities/input-type';
 import { NumericEntry } from './entities/numeric-entry';
 import { OperationEntry } from './entities/operation-entry';
-import { ComputeService } from './services/compute-service';
-import { HistoryService } from './services/history-service';
+import { ComputeService } from './services/compute.service';
+import { HistoryService } from './services/history.service';
 
 @Component({
   selector: 'app-root',
