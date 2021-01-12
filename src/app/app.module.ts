@@ -6,8 +6,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { HistoryService } from './services/history-service';
-import { ComputeService } from './services/compute-service';
+import { HistoryService } from './services/history.service';
+import { ComputeService } from './services/compute.service';
 
 @NgModule({
   declarations: [
