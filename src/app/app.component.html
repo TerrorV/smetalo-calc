@@ -1,3 +1,5 @@
+<basic-view></basic-view>
+
 <div class="calculator">
     <div class="calculator__main">
         <div class="calculator__input-container">
@@ -49,6 +51,12 @@
                         <td (click)="ProcessKeyPress('0')">0</td>
                         <td (click)="ProcessKeyPress('.')">.</td>
                         <td class="calculator__keypad-operation" (click)="ProcessKeyPress('=')">=</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="calculator__keypad-advanced">
+       ^ Advanced functions ^
+
+                        </td>
                     </tr>
                 </tbody>
             </table>
