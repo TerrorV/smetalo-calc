@@ -40,11 +40,19 @@
     display: flex;
     justify-content: center;
     user-select: none;
+    @media screen and (max-height: 650px) { 
+        bottom: 0px;
+        position: fixed;
+    }
 
     td {
         width: 150px;
-        //height: 90%;
-        height: 75px;
+            @media screen and (max-height: 650px) { 
+            height: 60px;
+        }
+        @media screen and (min-height: 651px) { 
+            height: 75px;
+        }
         text-align: center;
         background-color: bisque;
         font-size: xx-large;

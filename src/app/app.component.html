@@ -1,7 +1,7 @@
 <div class="calculator">
     <div class="calculator__main">
         <div class="calculator__input-container">
-            <input class="calculator__input" [ngModel]="historySvc.current" readonly />
+            <input class="calculator__input" [ngModel]="inputService.current" readonly />
             <p class="calculator__current-trans">
                 <span *ngFor="let entry of historySvc.GetLastTransaction()">{{entry.value}}</span>
                 <span
