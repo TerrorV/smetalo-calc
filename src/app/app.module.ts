@@ -8,10 +8,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HistoryService } from './services/history.service';
 import { ComputeService } from './services/compute.service';
+import { BasicComponent } from './views/basic.component';
+import { AdvancedComponent } from './views/advanced.component';
+import { InputService } from './services/input.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BasicComponent,
+    AdvancedComponent
   ],
   imports: [
     BrowserModule,
@@ -19,7 +24,7 @@ import { ComputeService } from './services/compute.service';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
   ],
-  providers: [HistoryService, ComputeService],
+  providers: [HistoryService, ComputeService, InputService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,49 @@
+<div class="calculator__keypad">
+
+    <table class="calculator__keypad-table">
+        <tbody>
+            <tr>
+                <td class="calculator__keypad-operation" (click)="inputService.ClearAll()">C</td>
+                <td class="calculator__keypad-operation" (click)="inputService.ProcessKeyPress('Escape')">CE</td>
+                <td class="calculator__keypad-operation" (click)="inputService.Percent()">%</td>
+                <td class="calculator__keypad-operation" (click)="inputService.ProcessKeyPress('Backspace')">&lt;=</td>
+            </tr>
+            <tr>
+                <td class="calculator__keypad-operation" (click)="inputService.OneOverX()">1/x</td>
+                <td class="calculator__keypad-operation" (click)="inputService.Square()">x^2</td>
+                <td class="calculator__keypad-operation" (click)="inputService.Root()">&#8730;</td>
+                <td class="calculator__keypad-operation" (click)="inputService.ProcessKeyPress('/')">/</td>
+            </tr>
+            <tr>
+                <td (click)="inputService.ProcessKeyPress('7')">7</td>
+                <td (click)="inputService.ProcessKeyPress('8')">8</td>
+                <td (click)="inputService.ProcessKeyPress('9')">9</td>
+                <td class="calculator__keypad-operation" (click)="inputService.ProcessKeyPress('*')">X</td>
+            </tr>
+            <tr>
+                <td (click)="inputService.ProcessKeyPress('4')">4</td>
+                <td (click)="inputService.ProcessKeyPress('5')">5</td>
+                <td (click)="inputService.ProcessKeyPress('6')">6</td>
+                <td class="calculator__keypad-operation" (click)="inputService.ProcessKeyPress('-')">-</td>
+            </tr>
+            <tr>
+                <td (click)="inputService.ProcessKeyPress('1')">1</td>
+                <td (click)="inputService.ProcessKeyPress('2')">2</td>
+                <td (click)="inputService.ProcessKeyPress('3')">3</td>
+                <td class="calculator__keypad-operation" (click)="inputService.ProcessKeyPress('+')">+</td>
+            </tr>
+            <tr>
+                <td (click)="inputService.ProcessKeyPress('inv')">+/-</td>
+                <td (click)="inputService.ProcessKeyPress('0')">0</td>
+                <td (click)="inputService.ProcessKeyPress('.')">.</td>
+                <td class="calculator__keypad-operation" (click)="inputService.ProcessKeyPress('=')">=</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="calculator__keypad-advanced" (click)="inputService.ShowAdvanced()">
+                    ^ Advanced functions ^
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

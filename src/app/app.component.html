@@ -1,7 +1,7 @@
 <div class="calculator">
     <div class="calculator__main">
         <div class="calculator__input-container">
-            <input class="calculator__input" [ngModel]="historySvc.current" readonly />
+            <input class="calculator__input" [ngModel]="inputService.current" readonly />
             <p class="calculator__current-trans">
                 <span *ngFor="let entry of historySvc.GetLastTransaction()">{{entry.value}}</span>
                 <span
@@ -11,53 +11,15 @@
                 &nbsp;
             </p>
         </div>
-        <div class="calculator__keypad">
-            <table class="calculator__keypad-table">
-                <tbody>
-                    <tr>
-                        <td class="calculator__keypad-operation" (click)="ClearAll()">C</td>
-                        <td class="calculator__keypad-operation" (click)="ProcessKeyPress('Escape')">CE</td>
-                        <td class="calculator__keypad-operation" (click)="Percent()">%</td>
-                        <td class="calculator__keypad-operation" (click)="ProcessKeyPress('Backspace')">&lt;=</td>
-                    </tr>
-                    <tr>
-                        <td class="calculator__keypad-operation" (click)="OneOverX()">1/x</td>
-                        <td class="calculator__keypad-operation" (click)="Square()">x^2</td>
-                        <td class="calculator__keypad-operation" (click)="Root()">&#8730;</td>
-                        <td class="calculator__keypad-operation" (click)="ProcessKeyPress('/')">/</td>
-                    </tr>
-                    <tr>
-                        <td (click)="ProcessKeyPress('7')">7</td>
-                        <td (click)="ProcessKeyPress('8')">8</td>
-                        <td (click)="ProcessKeyPress('9')">9</td>
-                        <td class="calculator__keypad-operation" (click)="ProcessKeyPress('*')">X</td>
-                    </tr>
-                    <tr>
-                        <td (click)="ProcessKeyPress('4')">4</td>
-                        <td (click)="ProcessKeyPress('5')">5</td>
-                        <td (click)="ProcessKeyPress('6')">6</td>
-                        <td class="calculator__keypad-operation" (click)="ProcessKeyPress('-')">-</td>
-                    </tr>
-                    <tr>
-                        <td (click)="ProcessKeyPress('1')">1</td>
-                        <td (click)="ProcessKeyPress('2')">2</td>
-                        <td (click)="ProcessKeyPress('3')">3</td>
-                        <td class="calculator__keypad-operation" (click)="ProcessKeyPress('+')">+</td>
-                    </tr>
-                    <tr>
-                        <td (click)="ProcessKeyPress('inv')">+/-</td>
-                        <td (click)="ProcessKeyPress('0')">0</td>
-                        <td (click)="ProcessKeyPress('.')">.</td>
-                        <td class="calculator__keypad-operation" (click)="ProcessKeyPress('=')">=</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+
+        <basic-view *ngIf='inputService.basicIsVisible' ></basic-view>
+        <advanced-view *ngIf='!inputService.basicIsVisible'></advanced-view>
+
     </div>
     <div class="calculator__history">
-            <div *ngFor="let trans of historySvc.GetListOfTransactions().slice(0,21)">
-                <span *ngFor="let entry of trans">{{entry.value}}</span>
-            </div>
+        <div *ngFor="let trans of historySvc.GetListOfTransactions().slice(0,21)">
+            <span *ngFor="let entry of trans">{{entry.value}}</span>
+        </div>
         <!-- <div *ngFor="let entry of historySvc.entries">
             {{entry.value}}
         </div> -->

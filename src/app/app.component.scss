@@ -24,33 +24,14 @@
 
     .calculator__input {
         width: 100%;
-        font-size: 40px;
+        // font-size: 40px;
+        font-size: 300%;
         text-align: right;
     }
 
     .calculator__current-trans {
-        font-size: 30px;
+        //font-size: 30px;
+        font-size: 110%;
         text-align: right;
-    }
-}
-
-.calculator__keypad {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    user-select: none;
-
-    td {
-        width: 150px;
-        height: 75px;
-        text-align: center;
-        background-color: bisque;
-        font-size: xx-large;
-        border: darkred;
-        border-width: 1px;
-    }
-
-    .calculator__keypad-operation {
-        background-color: darkgrey;
     }
 }

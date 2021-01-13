@@ -6,152 +6,152 @@ import { OperationEntry } from '../entities/operation-entry';
 @Injectable()
 export class HistoryService {
     public entries: Entry[] = [];
-    operation: string = "";
-    public current: string = '0';
-    lastIsNumber: boolean = true;
+    //operation: string = "";
+    //public current: string = '0';
+    //lastIsNumber: boolean = true;
 
     constructor() {
 
     }
 
     public AddElement(entry: Entry) {
-        if (this.entries.length > 0 && entry.constructor.name == 'NumericEntry' && this.entries[this.entries.length - 1].constructor.name == 'NumericEntry') {
-            this.entries.push(new OperationEntry(''));
-        }
+        // if (this.entries.length > 0 && entry.constructor.name == 'NumericEntry' && this.entries[this.entries.length - 1].constructor.name == 'NumericEntry') {
+        //     this.entries.push(new OperationEntry(''));
+        // }
 
         this.entries.push(entry);
 
-        if (entry.constructor.name == 'OperationEntry') {
-            this.operation = '';
-            this.lastIsNumber=false;
-            // this.entries.push(new NumericEntry(parseFloat(this.current)));
-        }
-        else {
-            //this.current = '0';
-            //this.entries.push(new OperationEntry(this.operation));
+        // if (entry.constructor.name == 'OperationEntry') {
+        //     this.operation = '';
+        //     this.lastIsNumber=false;
+        //     // this.entries.push(new NumericEntry(parseFloat(this.current)));
+        // }
+        // else {
+        //     //this.current = '0';
+        //     //this.entries.push(new OperationEntry(this.operation));
 
 
-            this.current = (entry as NumericEntry).value.toString();
-        }
+        //     this.current = (entry as NumericEntry).value.toString();
+        // }
 
     }
     /**
      * ProcessInput
      */
-    public ProcessInput(key: string) {
-        console.log(this.lastIsNumber);
-        switch (key) {
-            case 'Escape':
-                this.Clear();
-                break;
-            case 'Backspace':
-                this.DeleteLast();
-                break;
-            case 'inv':
-                this.InvertSign();
-                break;
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-            case '.':
-                this.ProcessNumber(key);
-                break;
-            // case 'Enter':
-            //     key = '=';
-            case '/':
-            case '*':
-            case '-':
-            case '+':
-                // case '=':
-                this.ProcessOperation(key);
-                break;
-            default:
-                break;
-        }
+    // public ProcessInput(key: string) {
+    //     console.log(this.lastIsNumber);
+    //     switch (key) {
+    //         case 'Escape':
+    //             this.Clear();
+    //             break;
+    //         case 'Backspace':
+    //             this.DeleteLast();
+    //             break;
+    //         case 'inv':
+    //             this.InvertSign();
+    //             break;
+    //         case '0':
+    //         case '1':
+    //         case '2':
+    //         case '3':
+    //         case '4':
+    //         case '5':
+    //         case '6':
+    //         case '7':
+    //         case '8':
+    //         case '9':
+    //         case '.':
+    //             this.ProcessNumber(key);
+    //             break;
+    //         // case 'Enter':
+    //         //     key = '=';
+    //         case '/':
+    //         case '*':
+    //         case '-':
+    //         case '+':
+    //             // case '=':
+    //             this.ProcessOperation(key);
+    //             break;
+    //         default:
+    //             break;
+    //     }
 
-        console.log(key);
-        console.log(this.entries);
-    }
+    //     console.log(key);
+    //     console.log(this.entries);
+    // }
 
-    private ProcessNumber(input: string) {
+    // private ProcessNumber(input: string) {
 
-        // if (!this.lastIsNumber && this.operation !== '') {
-        if (!this.lastIsNumber) {
-            this.AddElement(new OperationEntry(this.operation));
-            //this.entries.push(new OperationEntry(this.operation));
-            this.Clear();
-        }
+    //     // if (!this.lastIsNumber && this.operation !== '') {
+    //     if (!this.lastIsNumber) {
+    //         this.AddElement(new OperationEntry(this.operation));
+    //         //this.entries.push(new OperationEntry(this.operation));
+    //         this.Clear();
+    //     }
 
-        this.lastIsNumber = true;
-        if (input == '.' && this.current.indexOf('.') < 0) {
-            if (this.current == '')
-                this.current = '0';
-            this.current += '.';
-            return;
-        }
-        else if (input == '.') {
-            return;
-        }
-        else if (input == '0' && this.current == '0') {
-            return;
-        }
-        else if (input !== '.' && this.current == '0') {
-            this.current = '';
-        }
+    //     this.lastIsNumber = true;
+    //     if (input == '.' && this.current.indexOf('.') < 0) {
+    //         if (this.current == '')
+    //             this.current = '0';
+    //         this.current += '.';
+    //         return;
+    //     }
+    //     else if (input == '.') {
+    //         return;
+    //     }
+    //     else if (input == '0' && this.current == '0') {
+    //         return;
+    //     }
+    //     else if (input !== '.' && this.current == '0') {
+    //         this.current = '';
+    //     }
 
-        this.current += input;
-    }
+    //     this.current += input;
+    // }
 
-    private ProcessOperation(key: string) {
-        console.log("Last Op:" + this.operation);
-        if (this.lastIsNumber || this.operation == '') {
-            var currentNum: number = parseFloat(this.current);
-            this.AddElement(new NumericEntry(currentNum));
-            // this.entries.push(new NumericEntry(currentNum));
-            //this.current = '0';
-        }
+    // private ProcessOperation(key: string) {
+    //     console.log("Last Op:" + this.operation);
+    //     if (this.lastIsNumber || this.operation == '') {
+    //         var currentNum: number = parseFloat(this.current);
+    //         this.AddElement(new NumericEntry(currentNum));
+    //         // this.entries.push(new NumericEntry(currentNum));
+    //         //this.current = '0';
+    //     }
 
-        this.operation = key;
+    //     this.operation = key;
 
-        if (key == '=') {
-            this.AddElement(new OperationEntry(key));
-        }
+    //     if (key == '=') {
+    //         this.AddElement(new OperationEntry(key));
+    //     }
 
-        this.lastIsNumber = false;
-    }
+    //     this.lastIsNumber = false;
+    // }
 
-    private InvertSign() {
-        console.log("Inv");
-        if (this.current[0] == "-") {
-            this.current = this.current.substring(1);
-        }
-        else {
-            this.current = '-' + this.current;
-        }
-        // this.lastOperation = InputType.Number;
-    }
+    // private InvertSign() {
+    //     console.log("Inv");
+    //     if (this.current[0] == "-") {
+    //         this.current = this.current.substring(1);
+    //     }
+    //     else {
+    //         this.current = '-' + this.current;
+    //     }
+    //     // this.lastOperation = InputType.Number;
+    // }
 
-    private DeleteLast() {
-        this.current = this.current.substring(0, this.current.length - 1);
-        if (this.current.length == 0) {
-            this.current = '0';
-        }
+    // private DeleteLast() {
+    //     this.current = this.current.substring(0, this.current.length - 1);
+    //     if (this.current.length == 0) {
+    //         this.current = '0';
+    //     }
 
-        console.log("del last");
-        //  this.lastOperation = InputType.Number;
-    }
+    //     console.log("del last");
+    //     //  this.lastOperation = InputType.Number;
+    // }
 
-    private Clear() {
-        this.current = '0';
-        //this.operation = '';
-    }
+    // private Clear() {
+    //     this.current = '0';
+    //     //this.operation = '';
+    // }
 
     public GetLastTransaction(): Entry[] {
         // var transaction: Entry[] = [];
