@@ -25,7 +25,7 @@ export class InputService {
 
         if (entry.constructor.name == 'OperationEntry') {
             this.operation = '';
-            this.lastIsNumber=false;
+            this.lastIsNumber = false;
             // this.entries.push(new NumericEntry(parseFloat(this.current)));
         }
         else {
@@ -89,6 +89,7 @@ export class InputService {
         this.historySvc.AddElement(new NumericEntry(this.CalculateCurrent()));
         this.historySvc.AddElement(new OperationEntry(''));
 
+        this.current = this.historySvc.GetLast(NumericEntry).value.toString();
     }
 
     public CalculateCurrent(): number {
@@ -148,8 +149,8 @@ export class InputService {
 
     public RaiseToPower() {
         console.log("x^y");
-
-        this.historySvc.AddElement(new OperationEntry("^"));
+        this.ProcessOperation("^");
+        //this.historySvc.AddElement(new OperationEntry("^"));
     }
 
     /**
@@ -184,7 +185,7 @@ export class InputService {
     }
 
 
-    
+
     private ProcessNumber(input: string) {
 
         // if (!this.lastIsNumber && this.operation !== '') {
@@ -289,6 +290,7 @@ export class InputService {
             case '*':
             case '-':
             case '+':
+            case '^':
                 // case '=':
                 this.ProcessOperation(key);
                 break;
