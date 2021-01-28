@@ -35,6 +35,7 @@ export class TreenNode {
             switch (entry.value) {
                 case '/':
                 case '*':
+                case '^':
                     if (node.right == null) {
                         return false; //LEFT
 
