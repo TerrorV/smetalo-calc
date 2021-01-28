@@ -25,7 +25,7 @@ transaction: Entry[]     */
         var tree: TreenNode = this.BuildTree(transaction);
         console.log(tree);
         try {
-          console.log(  this.linearC.Compute(transaction));
+        //   console.log(  this.linearC.Compute(transaction));
             //console.log(this.GetComputeArray(tree));
             return this.GetValue(tree);
 

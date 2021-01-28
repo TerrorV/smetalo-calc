@@ -6,7 +6,11 @@ export class LinearComputeService {
     /**
  * Compute
 transaction: Entry[]     */
-    public Compute(transaction: Entry[]): number {
+public Compute(transaction: Entry[]): number {
+    transaction.reverse().splice(transaction.length - 1, 1);
+    return this.InternalCompute(transaction);
+}
+    public InternalCompute(transaction: Entry[]): number {
         //  transaction.reverse().splice(transaction.length - 1, 1);
         console.log(transaction);
 
@@ -18,13 +22,14 @@ transaction: Entry[]     */
             if (index + 2 < transaction.length && operation.IsSmallerThan(transaction[index + 2] as OperationEntry)) {
                 // var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, transaction[index + 2] as OperationEntry)
                 var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, operation)
-                operand = new NumericEntry(this.Compute(transaction.slice(index + 1, endIndex + 1)));
+                operand = new NumericEntry(this.InternalCompute(transaction.slice(index + 1, endIndex + 1)));
                 index = endIndex - 1;
-            } else if (index + 2 < transaction.length && (!operation.IsSmallerThan(transaction[index + 2] as OperationEntry) && !operation.IsBiggerThan(transaction[index + 2] as OperationEntry))) {
-            } else {
-                result = this.ExecuteCalculation(result, operand.value, operation);
-                return result;
-            }
+            } 
+            // else if (index + 2 < transaction.length && (!operation.IsSmallerThan(transaction[index + 2] as OperationEntry) && !operation.IsBiggerThan(transaction[index + 2] as OperationEntry))) {
+            // } else {
+            //     result = this.ExecuteCalculation(result, operand.value, operation);
+            //     return result;
+            // }
             
             result = this.ExecuteCalculation(result, operand.value, operation);
             // result = this.ExecuteCalculation(result, operand.value, operation);

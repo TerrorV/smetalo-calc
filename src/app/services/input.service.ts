@@ -4,6 +4,7 @@ import { NumericEntry } from "../entities/numeric-entry";
 import { OperationEntry } from "../entities/operation-entry";
 import { ComputeService } from "./compute.service";
 import { HistoryService } from "./history.service";
+import { LinearComputeService } from "./linear-compute.service";
 
 @Injectable()
 export class InputService {
@@ -12,7 +13,7 @@ export class InputService {
     public current: string = '0';
     lastIsNumber: boolean = true;
 
-    constructor(public historySvc: HistoryService, public computeService: ComputeService) {
+    constructor(public historySvc: HistoryService, public computeService: ComputeService, private linearC:LinearComputeService) {
 
     }
 
@@ -98,7 +99,8 @@ export class InputService {
     }
 
     public Calculate(trans: Entry[]): number {
-        return this.computeService.Compute(trans.reverse());
+        return this.linearC.Compute(trans.reverse());
+        // return this.computeService.Compute(trans.reverse());
     }
     public OneOverX() {
         console.log("1/x");
