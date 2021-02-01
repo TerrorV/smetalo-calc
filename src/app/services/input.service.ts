@@ -12,8 +12,9 @@ export class InputService {
     operation: string = "";
     public current: string = '0';
     lastIsNumber: boolean = true;
+    scopeDepth: number = 0;
 
-    constructor(public historySvc: HistoryService, public computeService: ComputeService, private linearC:LinearComputeService) {
+    constructor(public historySvc: HistoryService, public computeService: ComputeService, private linearC: LinearComputeService) {
 
     }
 
@@ -169,20 +170,20 @@ export class InputService {
 
     public ProcessKeyPress(key: string) {
         this.ProcessInput(key);
-        switch (key) {
-            case '%':
-                this.Percent();
-                break;
-            case '=':
-            case 'Enter':
-                this.Equals();
-                break;
-            case 'Escape':
-                this.Clear();
-                break;
-            default:
-                break;
-        }
+        // switch (key) {
+        //     case '%':
+        //         this.Percent();
+        //         break;
+        //     case '=':
+        //     case 'Enter':
+        //         this.Equals();
+        //         break;
+        //     case 'Escape':
+        //         this.Clear();
+        //         break;
+        //     default:
+        //         break;
+        // }
 
     }
 
@@ -264,6 +265,13 @@ export class InputService {
     public ProcessInput(key: string) {
         console.log(this.lastIsNumber);
         switch (key) {
+            case '%':
+                this.Percent();
+                break;
+            case '=':
+            case 'Enter':
+                this.Equals();
+                break;
             case 'Escape':
                 this.Clear();
                 break;
@@ -296,6 +304,12 @@ export class InputService {
                 // case '=':
                 this.ProcessOperation(key);
                 break;
+
+            case '(':
+            case ')':
+                this.ProcessBrackets(key)
+
+                break;
             default:
                 break;
         }
@@ -304,4 +318,34 @@ export class InputService {
         // console.log(this.entries);
     }
 
+    private ProcessBrackets(key: string) {
+        switch (key) {
+            case '(':
+                if (this.lastIsNumber) {
+                    return;
+                }
+
+                this.scopeDepth++;
+                break;
+            case ')':
+                if (this.scopeDepth > 0) {
+                    return;
+                }
+
+                this.scopeDepth--;
+                break;
+            default:
+                break;
+        }
+
+        if (!this.lastIsNumber) {
+            this.AddElement(new OperationEntry(this.operation));
+            //this.entries.push(new OperationEntry(this.operation));
+            this.Clear();
+        } else {
+            this.AddElement(new NumericEntry(parseFloat(this.current)));
+        }
+
+        this.AddElement(new OperationEntry(key));
+    }
 }
