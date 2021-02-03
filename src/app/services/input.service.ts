@@ -20,10 +20,10 @@ export class InputService {
 
     public AddElement(entry: Entry) {
         if (this.historySvc.entries.length > 0 && entry.constructor.name == 'NumericEntry' && this.historySvc.entries[this.historySvc.entries.length - 1].constructor.name == 'NumericEntry') {
-            this.historySvc.entries.push(new OperationEntry(''));
+            this.historySvc.AddElement(new OperationEntry(''));
         }
 
-        this.historySvc.entries.push(entry);
+        this.historySvc.AddElement(entry);
 
         if (entry.constructor.name == 'OperationEntry') {
             this.operation = '';
@@ -68,7 +68,7 @@ export class InputService {
         console.log(this.historySvc.GetLast(NumericEntry));
         var trans = this.historySvc.GetLastTransaction();
         if (trans[trans.length - 1].constructor.name == 'OperationEntry' && !this.historySvc.LastTransIsComplete()) {
-            this.historySvc.AddElement(new NumericEntry(parseFloat(this.current)));
+            this.AddElement(new NumericEntry(parseFloat(this.current)));
             trans = this.historySvc.GetLastTransaction();
         }
 
@@ -82,14 +82,14 @@ export class InputService {
             newTrans.push(trans[trans.length - 5]);
             newTrans.push(trans[trans.length - 4]);
             for (const iterator of newTrans) {
-                this.historySvc.AddElement(iterator);
+                this.AddElement(iterator);
             }
             console.log(newTrans);
         }
 
-        this.historySvc.AddElement(new OperationEntry('='));
-        this.historySvc.AddElement(new NumericEntry(this.CalculateCurrent()));
-        this.historySvc.AddElement(new OperationEntry(''));
+        this.AddElement(new OperationEntry('='));
+        this.AddElement(new NumericEntry(this.CalculateCurrent()));
+        this.AddElement(new OperationEntry(''));
 
         this.current = this.historySvc.GetLast(NumericEntry).value.toString();
     }
@@ -190,10 +190,12 @@ export class InputService {
 
 
     private ProcessNumber(input: string) {
-
+        // if(this.historySvc.GetLast(Entry).value == ')'){
+        //     return;
+        // }
         // if (!this.lastIsNumber && this.operation !== '') {
         if (!this.lastIsNumber) {
-            this.historySvc.AddElement(new OperationEntry(this.operation));
+            this.AddElement(new OperationEntry(this.operation));
             //this.entries.push(new OperationEntry(this.operation));
             this.Clear();
         }
@@ -222,15 +224,18 @@ export class InputService {
         console.log("Last Op:" + this.operation);
         if (this.lastIsNumber || this.operation == '') {
             var currentNum: number = parseFloat(this.current);
-            this.historySvc.AddElement(new NumericEntry(currentNum));
+            //  this.historySvc.AddElement(new NumericEntry(currentNum));
+            this.AddElement(new NumericEntry(currentNum));
             // this.entries.push(new NumericEntry(currentNum));
             //this.current = '0';
+        } else if (this.operation == ')') {
+            this.AddElement(new OperationEntry(this.operation));
         }
 
         this.operation = key;
 
         if (key == '=') {
-            this.historySvc.AddElement(new OperationEntry(key));
+            this.AddElement(new OperationEntry(key));
         }
 
         this.lastIsNumber = false;
@@ -328,7 +333,7 @@ export class InputService {
                 this.scopeDepth++;
                 break;
             case ')':
-                if (this.scopeDepth > 0) {
+                if (this.scopeDepth == 0) {
                     return;
                 }
 
@@ -346,6 +351,8 @@ export class InputService {
             this.AddElement(new NumericEntry(parseFloat(this.current)));
         }
 
-        this.AddElement(new OperationEntry(key));
+        this.operation = key;
+        // this.AddElement(new OperationEntry(key));
+        this.lastIsNumber = false;
     }
 }
