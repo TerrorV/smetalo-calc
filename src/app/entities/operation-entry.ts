@@ -13,13 +13,19 @@ entry:OperationEntry     */
     public IsBiggerThan(entry: OperationEntry): boolean {
         var first: number = this.ValueToNumber(this.value);
         var second: number = this.ValueToNumber(entry.value);
-        return first > second
+        return first > second;
+    }
+
+    public IsEqaul(entry: OperationEntry): boolean {
+        var first: number = this.ValueToNumber(this.value);
+        var second: number = this.ValueToNumber(entry.value);
+        return first == second;
     }
 
     public IsSmallerThan(entry: OperationEntry): boolean {
         var first: number = this.ValueToNumber(this.value);
         var second: number = this.ValueToNumber(entry.value);
-        return first < second
+        return first < second;
     }
 
     private ValueToNumber(value: string): number {
@@ -32,6 +38,10 @@ entry:OperationEntry     */
                 return 1;
             case "^":
                 return 2;
+            case "(":
+                return 99;
+            case ")":
+                return -1;
             default:
                 return -1;
         }
