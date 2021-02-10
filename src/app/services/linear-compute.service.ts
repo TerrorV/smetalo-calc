@@ -52,14 +52,15 @@ transaction: Entry[]     */
 
             switch (temp.constructor.name) {
                 case 'OperationEntry':
-                    var operand: NumericEntry = transaction[index + 1];
+                    var operand: Entry = transaction[index + 1];
                     const operation: OperationEntry = temp as OperationEntry;
                     if (operation.value == '(') {
-                        var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, new OperationEntry(')'));
+                        var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, prevOperation);
+                        // var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, new OperationEntry(')'));
                         operand = new NumericEntry(this.InternalCompute(transaction.slice(index + 1, endIndex + 1)));
                         index = endIndex + 1;
 
-                        if(prevOperation.value ==''){
+                        if (prevOperation.value == '') {
                             result = operand.value;
                             continue;
                         }
@@ -71,6 +72,13 @@ transaction: Entry[]     */
                         // index = endIndex - 1;
                         index = endIndex;
                     } else {
+                        if (operand.constructor.name == 'OperationEntry') {
+                            // var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, operand as OperationEntry)
+                            var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, operation)
+                            operand = new NumericEntry(this.InternalCompute(transaction.slice(index + 1, endIndex + 1)));
+                            index = endIndex - 1;
+                        }
+
                         index++;
                     }
 
@@ -98,8 +106,26 @@ transaction: Entry[]     */
 
         return result;
     }
+    
+    private GetNextChangeIndex(transaction: Entry[], startIndex: number, currentOperation: OperationEntry): number {
+        for (let index = startIndex; index < transaction.length; index++) {
+            const element = transaction[index];
+            // if (element.constructor.name === 'OperationEntry' && (currentOperation.IsBiggerThan(element as OperationEntry) || currentOperation.IsSmallerThan(element as OperationEntry))) {
+            if (element.constructor.name == 'NumericEntry' && 
+            (index==transaction.length-1 ||        
+            !(transaction[index + 1] as OperationEntry).IsBiggerThan(currentOperation))) {
+                return index;
+            }else if (element.value == '(') {
+                var endIndex: number = this.GetNextChangeIndex(transaction, index + 1, new OperationEntry(')'));
+                index=endIndex +1;
+            } else if (element.constructor.name === 'OperationEntry' && (!currentOperation.IsSmallerThan(element as OperationEntry))) {
+                return index - 1;
+            }
+        }
 
-
+        return transaction.length;
+    }
+/*
     private GetNextChangeIndex(transaction: Entry[], startIndex: number, currentOperation: OperationEntry): number {
         for (let index = startIndex; index < transaction.length; index++) {
             const element = transaction[index];
@@ -109,11 +135,14 @@ transaction: Entry[]     */
             } else if (element.constructor.name === 'OperationEntry' && (!currentOperation.IsSmallerThan(element as OperationEntry))) {
                 return index - 1;
             }
+            else if (element.constructor.name == 'NumericEntry' && !(transaction[index + 1] as OperationEntry).IsBiggerThan(currentOperation)) {
+                return index;
+            }
         }
 
         return transaction.length;
     }
-
+*/
     private ExecuteSimpleCompute(transaction: Entry[]): number {
         var result: number = transaction[0].value;
         for (let index = 1; index < transaction.length - 1; index += 2) {
