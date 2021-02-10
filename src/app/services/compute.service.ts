@@ -3,10 +3,18 @@ import { Entry } from "../entities/entry";
 import { NumericEntry } from "../entities/numeric-entry";
 import { OperationEntry } from "../entities/operation-entry";
 import { TreenNode } from "../entities/tree-node";
+import { LinearComputeService } from "./linear-compute.service";
 
 @Injectable()
 export class ComputeService {
 
+    /**
+     *
+     */
+    constructor(private linearC:LinearComputeService) {
+    
+        
+    }
     /**
      * Compute
 transaction: Entry[]     */
@@ -17,10 +25,12 @@ transaction: Entry[]     */
         var tree: TreenNode = this.BuildTree(transaction);
         console.log(tree);
         try {
+        //   console.log(  this.linearC.Compute(transaction));
             //console.log(this.GetComputeArray(tree));
             return this.GetValue(tree);
 
         } catch (error) {
+            console.log(error);
             return Number.POSITIVE_INFINITY;
         }
     }
@@ -29,7 +39,7 @@ transaction: Entry[]     */
         var result: number = leftBranch[0].value;
         for (let index = 1; index < leftBranch.length - 1; index += 2) {
             const entry = leftBranch[index + 1];
-            var operation: Entry = leftBranch[index];
+            var operation: OperationEntry = leftBranch[index] as OperationEntry;
             result = this.ExecuteCalculation(result, entry.value, operation);
 
         }
@@ -61,7 +71,7 @@ transaction: Entry[]     */
     private GetNodeValue(node: TreenNode): number {
         var currentNode: TreenNode = node;
         var executeArray: Entry[] = [];
-        while ((currentNode.left != null && currentNode.value.constructor.name=='NumericEntry' ) || (currentNode.right != null&& currentNode.value.constructor.name=='OperationEntry') ) {
+        while ((currentNode.left != null && currentNode.value.constructor.name == 'NumericEntry') || (currentNode.right != null && currentNode.value.constructor.name == 'OperationEntry')) {
             executeArray.push(currentNode.value);
             if (currentNode.left != null) {
 
@@ -88,6 +98,8 @@ transaction: Entry[]     */
                 return (accumulator - current);
             case '*':
                 return (accumulator * current);
+            case '^':
+                return Math.pow(accumulator, current);
             case '/':
                 if (current == 0) {
                     throw new Error("Division by zero");

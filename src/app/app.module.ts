@@ -11,6 +11,7 @@ import { ComputeService } from './services/compute.service';
 import { BasicComponent } from './views/basic.component';
 import { AdvancedComponent } from './views/advanced.component';
 import { InputService } from './services/input.service';
+import { LinearComputeService } from './services/linear-compute.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { InputService } from './services/input.service';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
   ],
-  providers: [HistoryService, ComputeService, InputService],
+  providers: [HistoryService, ComputeService, InputService,LinearComputeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

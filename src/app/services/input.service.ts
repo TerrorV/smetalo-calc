@@ -4,6 +4,7 @@ import { NumericEntry } from "../entities/numeric-entry";
 import { OperationEntry } from "../entities/operation-entry";
 import { ComputeService } from "./compute.service";
 import { HistoryService } from "./history.service";
+import { LinearComputeService } from "./linear-compute.service";
 
 @Injectable()
 export class InputService {
@@ -11,17 +12,18 @@ export class InputService {
     operation: string = "";
     public current: string = '0';
     lastIsNumber: boolean = true;
+    scopeDepth: number = 0;
 
-    constructor(public historySvc: HistoryService, public computeService: ComputeService) {
+    constructor(public historySvc: HistoryService, public computeService: ComputeService, private linearC: LinearComputeService) {
 
     }
 
     public AddElement(entry: Entry) {
         if (this.historySvc.entries.length > 0 && entry.constructor.name == 'NumericEntry' && this.historySvc.entries[this.historySvc.entries.length - 1].constructor.name == 'NumericEntry') {
-            this.historySvc.entries.push(new OperationEntry(''));
+            this.historySvc.AddElement(new OperationEntry(''));
         }
 
-        this.historySvc.entries.push(entry);
+        this.historySvc.AddElement(entry);
 
         if (entry.constructor.name == 'OperationEntry') {
             this.operation = '';
@@ -66,7 +68,7 @@ export class InputService {
         console.log(this.historySvc.GetLast(NumericEntry));
         var trans = this.historySvc.GetLastTransaction();
         if (trans[trans.length - 1].constructor.name == 'OperationEntry' && !this.historySvc.LastTransIsComplete()) {
-            this.historySvc.AddElement(new NumericEntry(parseFloat(this.current)));
+            this.AddElement(new NumericEntry(parseFloat(this.current)));
             trans = this.historySvc.GetLastTransaction();
         }
 
@@ -80,14 +82,14 @@ export class InputService {
             newTrans.push(trans[trans.length - 5]);
             newTrans.push(trans[trans.length - 4]);
             for (const iterator of newTrans) {
-                this.historySvc.AddElement(iterator);
+                this.AddElement(iterator);
             }
             console.log(newTrans);
         }
 
-        this.historySvc.AddElement(new OperationEntry('='));
-        this.historySvc.AddElement(new NumericEntry(this.CalculateCurrent()));
-        this.historySvc.AddElement(new OperationEntry(''));
+        this.AddElement(new OperationEntry('='));
+        this.AddElement(new NumericEntry(this.CalculateCurrent()));
+        this.AddElement(new OperationEntry(''));
 
         this.current = this.historySvc.GetLast(NumericEntry).value.toString();
     }
@@ -98,7 +100,8 @@ export class InputService {
     }
 
     public Calculate(trans: Entry[]): number {
-        return this.computeService.Compute(trans.reverse());
+        return this.linearC.Compute(trans.reverse());
+        // return this.computeService.Compute(trans.reverse());
     }
     public OneOverX() {
         console.log("1/x");
@@ -167,30 +170,32 @@ export class InputService {
 
     public ProcessKeyPress(key: string) {
         this.ProcessInput(key);
-        switch (key) {
-            case '%':
-                this.Percent();
-                break;
-            case '=':
-            case 'Enter':
-                this.Equals();
-                break;
-            case 'Escape':
-                this.Clear();
-                break;
-            default:
-                break;
-        }
+        // switch (key) {
+        //     case '%':
+        //         this.Percent();
+        //         break;
+        //     case '=':
+        //     case 'Enter':
+        //         this.Equals();
+        //         break;
+        //     case 'Escape':
+        //         this.Clear();
+        //         break;
+        //     default:
+        //         break;
+        // }
 
     }
 
 
 
     private ProcessNumber(input: string) {
-
+        // if(this.historySvc.GetLast(Entry).value == ')'){
+        //     return;
+        // }
         // if (!this.lastIsNumber && this.operation !== '') {
         if (!this.lastIsNumber) {
-            this.historySvc.AddElement(new OperationEntry(this.operation));
+            this.AddElement(new OperationEntry(this.operation));
             //this.entries.push(new OperationEntry(this.operation));
             this.Clear();
         }
@@ -219,15 +224,18 @@ export class InputService {
         console.log("Last Op:" + this.operation);
         if (this.lastIsNumber || this.operation == '') {
             var currentNum: number = parseFloat(this.current);
-            this.historySvc.AddElement(new NumericEntry(currentNum));
+            //  this.historySvc.AddElement(new NumericEntry(currentNum));
+            this.AddElement(new NumericEntry(currentNum));
             // this.entries.push(new NumericEntry(currentNum));
             //this.current = '0';
+        } else if (this.operation == ')') {
+            this.AddElement(new OperationEntry(this.operation));
         }
 
         this.operation = key;
 
         if (key == '=') {
-            this.historySvc.AddElement(new OperationEntry(key));
+            this.AddElement(new OperationEntry(key));
         }
 
         this.lastIsNumber = false;
@@ -262,6 +270,13 @@ export class InputService {
     public ProcessInput(key: string) {
         console.log(this.lastIsNumber);
         switch (key) {
+            case '%':
+                this.Percent();
+                break;
+            case '=':
+            case 'Enter':
+                this.Equals();
+                break;
             case 'Escape':
                 this.Clear();
                 break;
@@ -294,6 +309,12 @@ export class InputService {
                 // case '=':
                 this.ProcessOperation(key);
                 break;
+
+            case '(':
+            case ')':
+                this.ProcessBrackets(key)
+
+                break;
             default:
                 break;
         }
@@ -302,4 +323,36 @@ export class InputService {
         // console.log(this.entries);
     }
 
+    private ProcessBrackets(key: string) {
+        switch (key) {
+            case '(':
+                if (this.lastIsNumber) {
+                    return;
+                }
+
+                this.scopeDepth++;
+                break;
+            case ')':
+                if (this.scopeDepth == 0) {
+                    return;
+                }
+
+                this.scopeDepth--;
+                break;
+            default:
+                break;
+        }
+
+        if (!this.lastIsNumber) {
+            this.AddElement(new OperationEntry(this.operation));
+            //this.entries.push(new OperationEntry(this.operation));
+            this.Clear();
+        } else {
+            this.AddElement(new NumericEntry(parseFloat(this.current)));
+        }
+
+        this.operation = key;
+        // this.AddElement(new OperationEntry(key));
+        this.lastIsNumber = false;
+    }
 }
