@@ -55,6 +55,7 @@ export class InputService {
 
     public Clear() {
         this.current = "0";
+        this.operation = "";
     }
 
     public ClearAll() {
@@ -66,11 +67,14 @@ export class InputService {
 
     public Equals() {
         console.log(this.historySvc.GetLast(NumericEntry));
+        console.log(this.operation);
         var trans = this.historySvc.GetLastTransaction();
         if (trans[trans.length - 1].constructor.name == 'OperationEntry' && !this.historySvc.LastTransIsComplete()) {
             this.AddElement(new NumericEntry(parseFloat(this.current)));
             trans = this.historySvc.GetLastTransaction();
         }
+        
+        this.CloseAllBrackets();
 
         // // var isCompleted = this.Contains(trans, '=');
         var isCompleted = this.historySvc.LastTransIsComplete();
@@ -92,6 +96,16 @@ export class InputService {
         this.AddElement(new OperationEntry(''));
 
         this.current = this.historySvc.GetLast(NumericEntry).value.toString();
+    }
+
+    CloseAllBrackets() {
+        if (this.operation===')') {
+            this.scopeDepth++;
+        }
+
+        for (let index = 0; index < this.scopeDepth; this.scopeDepth--) {
+            this.AddElement(new OperationEntry(')'));            
+        }
     }
 
     public CalculateCurrent(): number {
