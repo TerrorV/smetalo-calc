@@ -16,7 +16,7 @@ export class InputService {
     public current: string = '0';
     lastIsNumber: boolean = true;
     scopeDepth: number = 0;
-    public behavior:IBehavior;
+    public behavior: IBehavior;
 
     constructor(public historySvc: HistoryService, public computeService: ComputeService, private linearC: LinearComputeService, private behaviorProvider: BehaviorProvider) {
         this.behavior = behaviorProvider.GetBehavior('0');
@@ -73,7 +73,7 @@ export class InputService {
         console.log(this.historySvc.GetLast(NumericEntry));
         console.log(this.operation);
         var trans = this.historySvc.GetLastTransaction();
-        if (trans[trans.length - 1].constructor.name == 'OperationEntry' && !this.historySvc.LastTransIsComplete()) {
+        if (trans[trans.length - 1].constructor.name == 'OperationEntry' && !this.historySvc.LastTransIsComplete() && trans[trans.length - 1].value !=")") {
             this.AddElement(new NumericEntry(parseFloat(this.current)));
             trans = this.historySvc.GetLastTransaction();
         }
@@ -248,7 +248,7 @@ export class InputService {
             //this.current = '0';
         } else if (this.operation == ')') {
             this.AddElement(new OperationEntry(this.operation));
-        } else if(this.operation=='('){
+        } else if (this.operation == '(') {
             this.AddElement(new OperationEntry(this.operation));
 
             var currentNum: number = parseFloat(this.current);
@@ -372,12 +372,12 @@ export class InputService {
             var lastOperation = this.operation;
             this.AddElement(new OperationEntry(this.operation));
 
-            if(lastOperation =="(" && key ==")"){
+            if (lastOperation == "(" && key == ")") {
                 this.AddElement(new NumericEntry(parseFloat(this.current)));
             }
             //this.entries.push(new OperationEntry(this.operation));
             this.Clear();
-        } else {
+        } else if (this.historySvc.entries.length > 0) {
             this.AddElement(new NumericEntry(parseFloat(this.current)));
         }
 

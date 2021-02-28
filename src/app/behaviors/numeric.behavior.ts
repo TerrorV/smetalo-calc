@@ -9,7 +9,7 @@ export class NumericBehavior implements IBehavior {
 
     }
 
-    GetFormattedTransaction(operation: string, current: string, key: string): string {
+    GetFormattedTransaction(operation: string, current: string): string {
         console.log('numeric behavior');
         var trans: Entry[] = this.historyService.GetLastTransaction();
         var displayText: string = '';
