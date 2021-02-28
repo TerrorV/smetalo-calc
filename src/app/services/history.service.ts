@@ -20,7 +20,7 @@ export class HistoryService {
         // }
 
         this.entries.push(entry);
-
+        console.log(this.entries);
         // if (entry.constructor.name == 'OperationEntry') {
         //     this.operation = '';
         //     this.lastIsNumber=false;
@@ -205,7 +205,7 @@ export class HistoryService {
         }
 
         transactions.push(currentTrans.reverse());
-        console.log(transactions);
+        //console.log(transactions);
         return transactions;
     }
 
