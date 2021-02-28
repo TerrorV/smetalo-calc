@@ -12,12 +12,17 @@ import { BasicComponent } from './views/basic.component';
 import { AdvancedComponent } from './views/advanced.component';
 import { InputService } from './services/input.service';
 import { LinearComputeService } from './services/linear-compute.service';
+import { BehaviorProvider } from './behaviors/behavior.provider';
+import { BracketBehavior } from './behaviors/bracket.behavior';
+import { NumericBehavior } from './behaviors/numeric.behavior';
+import { OperationBehavior } from './behaviors/operation.behavior';
 
 @NgModule({
   declarations: [
     AppComponent,
     BasicComponent,
-    AdvancedComponent
+    AdvancedComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -25,7 +30,7 @@ import { LinearComputeService } from './services/linear-compute.service';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     BrowserAnimationsModule
   ],
-  providers: [HistoryService, ComputeService, InputService,LinearComputeService],
+  providers: [HistoryService, ComputeService, InputService,LinearComputeService, BehaviorProvider, BracketBehavior,NumericBehavior,OperationBehavior],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

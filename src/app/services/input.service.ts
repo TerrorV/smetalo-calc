@@ -1,4 +1,7 @@
 import { HostListener, Injectable } from "@angular/core";
+import { BehaviorProvider } from "../behaviors/behavior.provider";
+import { IBehavior } from "../behaviors/interface.behavior";
+import { NumericBehavior } from "../behaviors/numeric.behavior";
 import { Entry } from "../entities/entry";
 import { NumericEntry } from "../entities/numeric-entry";
 import { OperationEntry } from "../entities/operation-entry";
@@ -13,9 +16,10 @@ export class InputService {
     public current: string = '0';
     lastIsNumber: boolean = true;
     scopeDepth: number = 0;
+    public behavior:IBehavior;
 
-    constructor(public historySvc: HistoryService, public computeService: ComputeService, private linearC: LinearComputeService) {
-
+    constructor(public historySvc: HistoryService, public computeService: ComputeService, private linearC: LinearComputeService, private behaviorProvider: BehaviorProvider) {
+        this.behavior = behaviorProvider.GetBehavior('0');
     }
 
     public AddElement(entry: Entry) {
@@ -73,7 +77,7 @@ export class InputService {
             this.AddElement(new NumericEntry(parseFloat(this.current)));
             trans = this.historySvc.GetLastTransaction();
         }
-        
+
         this.CloseAllBrackets();
 
         // // var isCompleted = this.Contains(trans, '=');
@@ -99,12 +103,12 @@ export class InputService {
     }
 
     CloseAllBrackets() {
-        if (this.operation===')') {
+        if (this.operation === ')') {
             this.scopeDepth++;
         }
 
         for (let index = 0; index < this.scopeDepth; this.scopeDepth--) {
-            this.AddElement(new OperationEntry(')'));            
+            this.AddElement(new OperationEntry(')'));
         }
     }
 
@@ -244,6 +248,12 @@ export class InputService {
             //this.current = '0';
         } else if (this.operation == ')') {
             this.AddElement(new OperationEntry(this.operation));
+        } else if(this.operation=='('){
+            this.AddElement(new OperationEntry(this.operation));
+
+            var currentNum: number = parseFloat(this.current);
+            this.AddElement(new NumericEntry(currentNum));
+
         }
 
         this.operation = key;
@@ -283,6 +293,7 @@ export class InputService {
      */
     public ProcessInput(key: string) {
         console.log(this.lastIsNumber);
+        this.behavior = this.behaviorProvider.GetBehavior(key);
         switch (key) {
             case '%':
                 this.Percent();
@@ -340,7 +351,7 @@ export class InputService {
     private ProcessBrackets(key: string) {
         switch (key) {
             case '(':
-                if (this.lastIsNumber) {
+                if (this.lastIsNumber && this.historySvc.entries.length > 0) {
                     return;
                 }
 
