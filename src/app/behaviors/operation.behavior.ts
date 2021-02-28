@@ -23,7 +23,7 @@ export class OperationBehavior implements IBehavior {
             }
             else if (trans[trans.length - 1].value == ')') {
                // displayText += operation;
-            }else if(operation == ''){
+            }else if(operation == '' && !this.historyService.LastTransIsComplete()){
                 displayText += current;
             }
 
