@@ -11,7 +11,7 @@ export class BracketBehavior implements IBehavior {
 
     }
 
-    GetFormattedTransaction(operation: string, current: string, key: string): string {
+    GetFormattedTransaction(operation: string, current: string): string {
         console.log("bracketsss");
         var trans: Entry[] = this.historyService.GetLastTransaction();
         var displayText: string = '';
@@ -34,8 +34,8 @@ export class BracketBehavior implements IBehavior {
                 displayText += current;
             }
 
-        } else if (key == '(') {
-            displayText += key;
+        } else if (operation == '(') {
+            displayText += operation + current;
         }
 
         return displayText;

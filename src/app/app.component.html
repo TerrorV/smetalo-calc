@@ -2,20 +2,15 @@
     <div class="calculator__main">
         <div class="calculator__input-container">
             <input class="calculator__input" [ngModel]="inputService.current" readonly />
-            show operation: {{inputService.operation == "(" || (inputService.operation ==")" && historySvc.GetLastEntry().value !==")" )}}
+            <!-- show operation: {{inputService.operation == "(" || (inputService.operation ==")" && historySvc.GetLastEntry().value !==")" )}}
             show current: {{historySvc.entries.length==0 || (historySvc.GetLastEntry().constructor.name == "OperationEntry" && historySvc.GetLastEntry().value !==""&& historySvc.GetLastEntry().value !==")")}}
-            show operation: {{historySvc.entries.length>0 && historySvc.GetLastEntry().constructor.name == "NumericEntry"}}
+            show operation: {{historySvc.entries.length>0 && historySvc.GetLastEntry().constructor.name == "NumericEntry"}} -->
             <p class="calculator__current-trans">
-                <span *ngFor="let entry of historySvc.GetLastTransaction()">{{entry.value}}</span>
-                <span *ngIf='inputService.operation == "(" || (inputService.operation ==")" && historySvc.GetLastEntry().value !==")" )'>{{inputService.operation}}</span>
-                <span
-                    *ngIf='historySvc.entries.length==0 || (historySvc.GetLastEntry().constructor.name == "OperationEntry" && historySvc.GetLastEntry().value !==""&& historySvc.GetLastEntry().value !==")")'>{{inputService.current}}</span>
-                <span
-                    *ngIf='historySvc.entries.length>0 && historySvc.GetLastEntry().constructor.name == "NumericEntry"'>{{inputService.operation}}</span>
+                <span>{{inputService.behavior.GetFormattedTransaction(inputService.operation, inputService.current)}}</span>
                 &nbsp;
             </p>
             <p>
-                Behavior result: {{inputService.behavior.GetFormattedTransaction(inputService.operation, inputService.current, '1')}}
+                Behavior result: {{inputService.behavior.GetFormattedTransaction(inputService.operation, inputService.current)}}
                 <br/>
                 {{inputService.behavior.constructor.name}}
             </p>
