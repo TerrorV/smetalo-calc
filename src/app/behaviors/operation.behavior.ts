@@ -10,6 +10,7 @@ export class OperationBehavior implements IBehavior {
     }
 
     GetFormattedTransaction(operation: string, current: string, key: string): string {
+        console.log('operation behavior');
         var trans: Entry[] = this.historyService.GetLastTransaction();
         var displayText: string = '';
         for (const entry of trans) {
@@ -21,12 +22,15 @@ export class OperationBehavior implements IBehavior {
                 displayText += current;
             }
             else if (trans[trans.length - 1].value == ')') {
-                displayText += operation;
+               // displayText += operation;
+            }else if(operation == ''){
+                displayText += current;
             }
+
 
             displayText +=  operation;
         }else{
-            displayText += current + key;
+            displayText += current + operation;
         }
 
 

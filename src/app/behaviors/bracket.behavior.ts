@@ -30,7 +30,10 @@ export class BracketBehavior implements IBehavior {
             }
             else if (trans[trans.length - 1].value == ')') {
                 displayText += operation;
+            }else if(operation == ''){
+                displayText += current;
             }
+
         } else if (key == '(') {
             displayText += key;
         }

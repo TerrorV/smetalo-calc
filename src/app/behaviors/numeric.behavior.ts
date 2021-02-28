@@ -10,6 +10,7 @@ export class NumericBehavior implements IBehavior {
     }
 
     GetFormattedTransaction(operation: string, current: string, key: string): string {
+        console.log('numeric behavior');
         var trans: Entry[] = this.historyService.GetLastTransaction();
         var displayText: string = '';
         for (const entry of trans) {
@@ -18,13 +19,16 @@ export class NumericBehavior implements IBehavior {
 
         if (trans.length > 0) {
             if (trans[trans.length - 1].value == '(') {
-                displayText += '(' +current;
+                //displayText += '(' +current;
+                displayText += current;
             }
             else if (trans[trans.length - 1].value == ')') {
                 displayText += ')' +operation;
+            }else{
+                displayText += current;
+
             }
 
-            displayText += key;
         }else{
             displayText += current;
         }

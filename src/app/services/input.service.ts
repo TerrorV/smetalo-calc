@@ -369,7 +369,12 @@ export class InputService {
         }
 
         if (!this.lastIsNumber) {
+            var lastOperation = this.operation;
             this.AddElement(new OperationEntry(this.operation));
+
+            if(lastOperation =="(" && key ==")"){
+                this.AddElement(new NumericEntry(parseFloat(this.current)));
+            }
             //this.entries.push(new OperationEntry(this.operation));
             this.Clear();
         } else {
