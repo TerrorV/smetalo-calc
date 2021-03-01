@@ -349,9 +349,10 @@ export class InputService {
     }
 
     private ProcessBrackets(key: string) {
+        var lastEntry = this.historySvc.GetLastEntry();
         switch (key) {
             case '(':
-                if (this.lastIsNumber && this.historySvc.entries.length > 0) {
+                if ((this.lastIsNumber || lastEntry.value ==')' || this.operation ==')') && this.historySvc.entries.length > 0) {
                     return;
                 }
 
