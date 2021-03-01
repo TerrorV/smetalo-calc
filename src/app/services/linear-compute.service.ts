@@ -95,6 +95,7 @@ transaction: Entry[]     */
                     break;
             }
 
+
             // else if (index + 2 < transaction.length && (!operation.IsSmallerThan(transaction[index + 2] as OperationEntry) && !operation.IsBiggerThan(transaction[index + 2] as OperationEntry))) {
             // } else {
             //     result = this.ExecuteCalculation(result, operand.value, operation);
@@ -103,6 +104,11 @@ transaction: Entry[]     */
 
             // result = this.ExecuteCalculation(result, operand.value, operation);
         }
+
+        if(transaction.length == 1){
+            result = transaction[0].value;
+        }
+
 
         return result;
     }
